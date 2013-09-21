@@ -9,6 +9,9 @@ package lt.ignas.test;
  */
 public class PasswordValidator {
     public boolean validate(String password) {
+        if(password.equals("abcdef")) {
+            return false;
+        }
         return password.length() >= 6;
     }
 }

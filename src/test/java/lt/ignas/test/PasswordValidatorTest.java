@@ -43,4 +43,10 @@ public class PasswordValidatorTest {
         PasswordValidator sut = new PasswordValidator();
         Assert.assertFalse(sut.validate(shortPassword));
     }
+
+    // password having no numbers is considered bad
+    public void shouldInvalidatePasswordHavingNoNumber() {
+        PasswordValidator sut = new PasswordValidator();
+        Assert.assertFalse(sut.validate("abcdef"));
+    }
 }
