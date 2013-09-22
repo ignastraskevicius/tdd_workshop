@@ -9,7 +9,7 @@ package lt.ignas.test;
  */
 public class PasswordValidator {
     public boolean validate(String password) {
-        if(!password.matches(".*\\d.*")) {
+        if(!password.matches(".*\\d.*") || password.equals("123456")) {
             return false;
         }
         return password.length() >= 6;

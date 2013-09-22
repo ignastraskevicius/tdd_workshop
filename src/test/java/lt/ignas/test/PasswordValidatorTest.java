@@ -61,4 +61,9 @@ public class PasswordValidatorTest {
     }
 
 
+    // invalidate passwor which has no letters
+    public void shoudInvalidatePasswordHavingNoLetters() {
+        PasswordValidator sut = new PasswordValidator();
+        Assert.assertFalse(sut.validate("123456"));
+    }
 }
