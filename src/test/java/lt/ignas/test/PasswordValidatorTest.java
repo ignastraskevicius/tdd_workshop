@@ -60,10 +60,20 @@ public class PasswordValidatorTest {
         Assert.assertFalse(sut.validate(password));
     }
 
+    @DataProvider
+    public static final Object[][] getPasswordsWithoutLetters() {
+        return new Object[][] {
+            {"111222"},
+            {"222###"},
+            {"      "}
+        };
+    }
 
+    // various cases of passwords having no letters. numbers, symbols, spaces
     // invalidate passwor which has no letters
-    public void shoudInvalidatePasswordHavingNoLetters() {
+    @Test(dataProvider = "getPasswordsWithoutLetters")
+    public void shoudInvalidatePasswordHavingNoLetters(String password) {
         PasswordValidator sut = new PasswordValidator();
-        Assert.assertFalse(sut.validate("123456"));
+        Assert.assertFalse(sut.validate(password));
     }
 }

@@ -19,10 +19,10 @@ public class PasswordValidator {
     }
 
     private boolean containsNumericChar(String string) {
-        return string.matches(".*\\d.*");
+        return string.matches(".*[0-9].*");
     }
 
     private boolean containsAlphbethicChar(String string) {
-        return !string.equals("123456");
+        return string.matches(".*[A-Za-z].*");
     }
 }
