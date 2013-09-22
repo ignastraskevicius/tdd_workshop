@@ -2,6 +2,7 @@ package lt.ignas.test;
 
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.util.Collections;
@@ -31,9 +32,31 @@ public class BookingSystemTest {
         assertEquals(booker.getBookedHours(), Collections.emptyList());
     }
 
-    // should book hour
-    public void shouldBookOneHour() {
-        booker.book(5);
-        assertEquals(booker.getBookedHours(), asList(5));
+    @DataProvider
+    public static final Object[][] getHour() {
+        return new Object[][] {
+            {0},
+            {15},
+            {23}
+        };
     }
+
+    // more cases
+    // should book hour
+    @Test(dataProvider = "getHour", dependsOnMethods = "shouldReturnNoBookedHoursWhenNobodyBookedYet")
+    public void shouldBookOneHour(int hour) {
+        booker.book(hour);
+        assertEquals(booker.getBookedHours(), asList(hour));
+    }
+
+    //should book more hours
+    @Test(dependsOnMethods = "shouldBookOneHour")
+    public void shouldBookMoreThanOneHour() {
+        booker.book(5);
+        booker.book(6);
+        assertEquals(booker.getBookedHours(), asList(5, 6));
+    }
+
+
+
 }

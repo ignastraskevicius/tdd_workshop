@@ -1,5 +1,6 @@
 package lt.ignas.test;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -13,19 +14,14 @@ import static java.util.Arrays.asList;
  * To change this template use File | Settings | File Templates.
  */
 public class Booker {
-    private Integer bookedHour = null;
+    private List<Integer> bookedHours = new ArrayList<Integer>();
 
     public List<Integer> getBookedHours() {
-        List<Integer> bookedHours;
-        if (bookedHour == null) {
-            bookedHours = Collections.emptyList();
-        } else {
-            bookedHours = asList(5);
-        }
         return bookedHours;
     }
 
     public void book(int bookedHour) {
-        this.bookedHour = bookedHour;
+
+        this.bookedHours.add(bookedHour);
     }
 }
