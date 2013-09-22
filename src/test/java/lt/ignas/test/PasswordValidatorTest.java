@@ -17,7 +17,7 @@ public class PasswordValidatorTest {
     @DataProvider
     public static final Object[][] getLongEnoughPasswords() {
         return new Object[][] {
-                {"123456"}, {"abcdefghi"}
+                {"111aaa222"}, {"ccc333"}
         };
     }
 
@@ -32,7 +32,7 @@ public class PasswordValidatorTest {
     @DataProvider
     public static final Object[][] getTooShortPasswords() {
         return new Object[][] {
-                {"12345"}, {"abcde"}
+                {"12345"}, {"aa66"}
         };
     }
 
@@ -43,10 +43,22 @@ public class PasswordValidatorTest {
         PasswordValidator sut = new PasswordValidator();
         Assert.assertFalse(sut.validate(shortPassword));
     }
-
-    // password having no numbers is considered bad
-    public void shouldInvalidatePasswordHavingNoNumber() {
-        PasswordValidator sut = new PasswordValidator();
-        Assert.assertFalse(sut.validate("abcdef"));
+    @DataProvider
+    public static final Object[][] getPasswordsWithoutNumbers() {
+        return new Object[][] {
+            {"aaaaaa"},
+            {"aaa***"},
+            {"      "}
+        };
     }
+
+    // various cases without numbers. Symbols, letters, but no numbers. These passwords are bad.
+    // password having no numbers is considered bad
+    @Test(dataProvider = "getPasswordsWithoutNumbers")
+    public void shouldInvalidatePasswordHavingNoNumber(String password) {
+        PasswordValidator sut = new PasswordValidator();
+        Assert.assertFalse(sut.validate(password));
+    }
+
+
 }
