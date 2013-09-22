@@ -9,9 +9,20 @@ package lt.ignas.test;
  */
 public class PasswordValidator {
     public boolean validate(String password) {
-        if(!password.matches(".*\\d.*") || password.equals("123456")) {
-            return false;
+        boolean isValid;
+        if(containsNumericChar(password) && containsAlphbethicChar(password)) {
+            isValid = password.length() >= 6;
+        } else {
+            isValid = false;
         }
-        return password.length() >= 6;
+        return isValid;
+    }
+
+    private boolean containsNumericChar(String string) {
+        return string.matches(".*\\d.*");
+    }
+
+    private boolean containsAlphbethicChar(String string) {
+        return !string.equals("123456");
     }
 }
