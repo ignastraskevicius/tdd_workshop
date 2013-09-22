@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
 
 import java.util.Collections;
 
+import static java.util.Arrays.asList;
 import static org.testng.Assert.assertEquals;
 
 /**
@@ -28,5 +29,11 @@ public class BookingSystemTest {
     // should return no hours when nobady has booked yet
     public void shouldReturnNoBookedHoursWhenNobodyBookedYet() {
         assertEquals(booker.getBookedHours(), Collections.emptyList());
+    }
+
+    // should book hour
+    public void shouldBookOneHour() {
+        booker.book(5);
+        assertEquals(booker.getBookedHours(), asList(5));
     }
 }
