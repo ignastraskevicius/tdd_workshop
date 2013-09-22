@@ -21,7 +21,12 @@ public class Booker {
     }
 
     public void book(int bookedHour) {
-
+        if(bookedHour < 0 || bookedHour > 23) {
+            throw new IllegalArgumentException("Invalid Hour");
+        }
+        if(bookedHours.contains(bookedHour)) {
+            throw new IllegalStateException();
+        }
         this.bookedHours.add(bookedHour);
     }
 }

@@ -57,6 +57,28 @@ public class BookingSystemTest {
         assertEquals(booker.getBookedHours(), asList(5, 6));
     }
 
+    @DataProvider
+    public static final Object[][] getInvalidHours() {
+        return new Object[][] {
+                {-1},
+            {-5},
+            {24},
+                {105}
+        };
+    }
 
+    //multiple cases for invalid hour
+    // booking should not work for "negative" hour
+    @Test(dataProvider = "getInvalidHours", expectedExceptions = IllegalArgumentException.class)
+    public void bookingShouldNotWorkForInvalidHour(int invalidHour) {
+        booker.book(invalidHour);
+    }
+
+    //should throw ISE when hour is already booked
+    @Test(expectedExceptions = IllegalStateException.class)
+    public void shouldThrowISEWhenBookingHourWhichIsAlreadyBooked() {
+        booker.book(5);
+        booker.book(5);
+    }
 
 }
