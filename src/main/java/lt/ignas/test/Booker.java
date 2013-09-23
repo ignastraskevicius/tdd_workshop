@@ -1,8 +1,6 @@
 package lt.ignas.test;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 
@@ -14,19 +12,19 @@ import static java.util.Arrays.asList;
  * To change this template use File | Settings | File Templates.
  */
 public class Booker {
-    private List<Integer> bookedHours = new ArrayList<Integer>();
+    private Set<Integer> bookedHours = new HashSet<Integer>();
 
     public List<Integer> getBookedHours() {
-        return bookedHours;
+        return new ArrayList<Integer>(bookedHours);
     }
 
     public void book(int bookedHour) {
         if(bookedHour < 0 || bookedHour > 23) {
             throw new IllegalArgumentException("Invalid Hour");
         }
-        if(bookedHours.contains(bookedHour)) {
+        boolean isBookingSuccessful = this.bookedHours.add(bookedHour);
+        if(!isBookingSuccessful) {
             throw new IllegalStateException();
         }
-        this.bookedHours.add(bookedHour);
     }
 }
