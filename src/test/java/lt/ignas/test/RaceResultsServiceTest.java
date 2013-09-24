@@ -17,6 +17,8 @@ public class RaceResultsServiceTest {
     private RaceResultsService raceResults;
     private Client clientA, clientB;
     private Message message;
+    Category category;
+
 
     @BeforeMethod
     public void setUp() {
@@ -24,41 +26,44 @@ public class RaceResultsServiceTest {
         clientA = mock(Client.class);
         clientB = mock(Client.class);
         message = mock(Message.class);
+        category = mock(Category.class);
     }
 
     public void notSubscribedClientShouldNotReceiveMessage() {
-        raceResults.send(message);
+        raceResults.send(message, category);
         verify(clientA, never()).receive(message);
         verify(clientB, never()).receive(message);
     }
 
     public void oneSubscribedClientShouldReceiveMessage() {
-        raceResults.addSubscriber(clientA);
-        raceResults.send(message);
+        raceResults.addSubscriber(clientA, category);
+        raceResults.send(message, category);
         verify(clientA).receive(message);
     }
 
     public void allSubscribedClientsShouldReceiveMessages() {
-        raceResults.addSubscriber(clientA);
-        raceResults.addSubscriber(clientB);
-        raceResults.send(message);
+        raceResults.addSubscriber(clientA, category);
+        raceResults.addSubscriber(clientB, category);
+        raceResults.send(message, category);
         verify(clientA).receive(message);
         verify(clientB).receive(message);
     }
 
     public void shouldSendOnlyOneMessageToMultiSubscriber() {
-        raceResults.addSubscriber(clientA);
-        raceResults.addSubscriber(clientA);
-        raceResults.send(message);
+        raceResults.addSubscriber(clientA, category);
+        raceResults.addSubscriber(clientA, category);
+        raceResults.send(message, category);
         //verify(clientA, times(1)).receive(message); // same as below - times(1) is the default
         verify(clientA).receive(message);
     }
 
     public void unsubscribedClientShouldNotReceiveMessages() {
-        raceResults.addSubscriber(clientA);
+        raceResults.addSubscriber(clientA, category);
         raceResults.removeSubscriber(clientA);
-        raceResults.send(message);
+        raceResults.send(message, category);
         verify(clientA, never()).receive(message);
     }
+
+    // refactor that category should include in subscription. Same category when subscribing and sending a message should end with message beeing sent.
 }
 

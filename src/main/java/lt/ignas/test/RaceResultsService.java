@@ -13,11 +13,11 @@ public class RaceResultsService {
 
     private Collection<Client> clients = new HashSet<Client>();
 
-    public void addSubscriber(Client client) {
+    public void addSubscriber(Client client, Category category) {
         clients.add(client);
     }
 
-    public void send(Message message) {
+    public void send(Message message, Category category) {
         for (Client client : clients) {
             client.receive(message);
         }
