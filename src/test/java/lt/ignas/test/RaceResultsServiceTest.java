@@ -17,7 +17,7 @@ public class RaceResultsServiceTest {
     private RaceResultsService raceResults;
     private Client clientA, clientB;
     private Message message;
-    Category category;
+    private Category category;
 
 
     @BeforeMethod
@@ -65,5 +65,7 @@ public class RaceResultsServiceTest {
     }
 
     // refactor that category should include in subscription. Same category when subscribing and sending a message should end with message beeing sent.
+
+
 }
 
