@@ -47,7 +47,6 @@ public class RaceResultsServiceTest {
     public void notSubscribedClientShouldNotReceiveMessage() {
         raceResults.send(message);
         verify(clientA, never()).receive(message);
-        verify(clientA).receive(message);
         verify(clientB, never()).receive(message);
     }
 
