@@ -65,7 +65,15 @@ public class RaceResultsServiceTest {
     }
 
     // refactor that category should include in subscription. Same category when subscribing and sending a message should end with message beeing sent.
+    // subscriber should not get message if category is not the same subscriber subscribed for
 
+    @Test
+    public void subscriberShouldNotGetMessageIfCategoryIsNotTheSameSubscriberSubscribedFor() {
+        Category category2 = mock(Category.class);
+        raceResults.addSubscriber(clientA, category);
+        raceResults.send(message, category2);
+        verify(clientA, never()).receive(message);
+    }
 
 }
 

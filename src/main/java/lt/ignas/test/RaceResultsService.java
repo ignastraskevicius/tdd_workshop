@@ -12,14 +12,19 @@ import java.util.HashSet;
 public class RaceResultsService {
 
     private Collection<Client> clients = new HashSet<Client>();
+    private Category registeredCategory;
+
 
     public void addSubscriber(Client client, Category category) {
+        this.registeredCategory = category;
         clients.add(client);
     }
 
     public void send(Message message, Category category) {
-        for (Client client : clients) {
-            client.receive(message);
+        if(this.registeredCategory == category) {
+            for (Client client : clients) {
+                client.receive(message);
+            }
         }
     }
 
