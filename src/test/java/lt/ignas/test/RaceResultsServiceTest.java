@@ -89,5 +89,18 @@ public class RaceResultsServiceTest {
         raceResults.send(message, categoryB);
         verify(clientA).receive(message);
     }
+
+    // subscriber should subscriber for more than one category
+    @Test
+    public void subscriberShouldSubscribeForMoreThanOneCategory() {
+        when(categoryB.getName()).thenReturn(Category.Name.F1);
+        when(categoryA.getName()).thenReturn(Category.Name.Horses);
+        raceResults.addSubscriber(clientA, categoryA);
+        raceResults.addSubscriber(clientA, categoryB);
+        raceResults.send(message, categoryA);
+        raceResults.send(message, categoryB);
+
+        verify(clientA, times(2)).receive(message);
+    }
 }
 
