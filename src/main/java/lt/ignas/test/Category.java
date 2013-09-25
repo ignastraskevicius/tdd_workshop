@@ -8,4 +8,9 @@ package lt.ignas.test;
  * To change this template use File | Settings | File Templates.
  */
 public class Category {
+    public Name getName() {
+        return null;
+    }
+
+    public enum Name {Horses, F1}
 }

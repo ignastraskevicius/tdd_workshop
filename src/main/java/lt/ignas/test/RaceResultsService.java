@@ -21,7 +21,7 @@ public class RaceResultsService {
     }
 
     public void send(Message message, Category category) {
-        if(this.registeredCategory == category) {
+        if(registeredCategory != null && this.registeredCategory.getName() == category.getName()) {
             for (Client client : clients) {
                 client.receive(message);
             }

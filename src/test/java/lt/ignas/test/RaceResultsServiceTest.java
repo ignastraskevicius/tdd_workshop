@@ -17,7 +17,8 @@ public class RaceResultsServiceTest {
     private RaceResultsService raceResults;
     private Client clientA, clientB;
     private Message message;
-    private Category category;
+    private Category categoryA;
+    private Category categoryB;
 
 
     @BeforeMethod
@@ -26,54 +27,67 @@ public class RaceResultsServiceTest {
         clientA = mock(Client.class);
         clientB = mock(Client.class);
         message = mock(Message.class);
-        category = mock(Category.class);
+        categoryA = mock(Category.class);
+        categoryB = mock(Category.class);
     }
 
     public void notSubscribedClientShouldNotReceiveMessage() {
-        raceResults.send(message, category);
+        raceResults.send(message, categoryA);
         verify(clientA, never()).receive(message);
         verify(clientB, never()).receive(message);
     }
 
     public void oneSubscribedClientShouldReceiveMessage() {
-        raceResults.addSubscriber(clientA, category);
-        raceResults.send(message, category);
+        raceResults.addSubscriber(clientA, categoryA);
+        raceResults.send(message, categoryA);
         verify(clientA).receive(message);
     }
 
     public void allSubscribedClientsShouldReceiveMessages() {
-        raceResults.addSubscriber(clientA, category);
-        raceResults.addSubscriber(clientB, category);
-        raceResults.send(message, category);
+        raceResults.addSubscriber(clientA, categoryA);
+        raceResults.addSubscriber(clientB, categoryA);
+        raceResults.send(message, categoryA);
         verify(clientA).receive(message);
         verify(clientB).receive(message);
     }
 
     public void shouldSendOnlyOneMessageToMultiSubscriber() {
-        raceResults.addSubscriber(clientA, category);
-        raceResults.addSubscriber(clientA, category);
-        raceResults.send(message, category);
+        raceResults.addSubscriber(clientA, categoryA);
+        raceResults.addSubscriber(clientA, categoryA);
+        raceResults.send(message, categoryA);
         //verify(clientA, times(1)).receive(message); // same as below - times(1) is the default
         verify(clientA).receive(message);
     }
 
     public void unsubscribedClientShouldNotReceiveMessages() {
-        raceResults.addSubscriber(clientA, category);
+        raceResults.addSubscriber(clientA, categoryA);
         raceResults.removeSubscriber(clientA);
-        raceResults.send(message, category);
+        raceResults.send(message, categoryA);
         verify(clientA, never()).receive(message);
     }
 
-    // refactor that category should include in subscription. Same category when subscribing and sending a message should end with message beeing sent.
-    // subscriber should not get message if category is not the same subscriber subscribed for
+    // refactor that categoryA should include in subscription. Same categoryA when subscribing and sending a message should end with message beeing sent.
+    // subscriber should not get message if categoryA is not the same subscriber subscribed for
 
     @Test
-    public void subscriberShouldNotGetMessageIfCategoryIsNotTheSameSubscriberSubscribedFor() {
-        Category category2 = mock(Category.class);
-        raceResults.addSubscriber(clientA, category);
-        raceResults.send(message, category2);
+    public void subscriberShouldNotGetMessageIfCategoryNameIsNotTheSameHeSubscribedFor() {
+        when(categoryB.getName()).thenReturn(Category.Name.F1);
+        when(categoryA.getName()).thenReturn(Category.Name.Horses);
+        raceResults.addSubscriber(clientA, categoryA);
+        raceResults.send(message, categoryB);
         verify(clientA, never()).receive(message);
     }
 
+    // subscriber should receive message if categoryA both
+    // ohe he subscribed and one message is send for have same names
+    @Test
+    public void subscriberShouldReceiveMessgeIfCategoryBothOneHeSubscribedAndOneMessageIsSentForHaveSameNames() {
+
+        when(categoryB.getName()).thenReturn(Category.Name.F1);
+        when(categoryA.getName()).thenReturn(Category.Name.F1);
+        raceResults.addSubscriber(clientA, categoryA);
+        raceResults.send(message, categoryB);
+        verify(clientA).receive(message);
+    }
 }
 
