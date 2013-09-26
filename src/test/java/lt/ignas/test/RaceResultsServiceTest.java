@@ -51,12 +51,24 @@ public class RaceResultsServiceTest {
         verify(clientB).receive(message);
     }
 
-    public void shouldSendOnlyOneMessageToMultiSubscriber() {
+    public void shouldSendOnlyOneMessageToMultiSubscriberOfOneCategory() {
         raceResults.addSubscriber(clientA, categoryA);
         raceResults.addSubscriber(clientA, categoryA);
         raceResults.send(message, categoryA);
         //verify(clientA, times(1)).receive(message); // same as below - times(1) is the default
         verify(clientA).receive(message);
+    }
+
+    // removing multisubscriber of one category once should be enough to unsubscribe
+    @Test
+    public void removingMultisubscriberOfOneCategoryOnceShouldBeEnoughToUnsubscribe() {
+        when(categoryA.getName()).thenReturn(Category.Name.F1);
+        raceResults.addSubscriber(clientA, categoryA);
+        raceResults.addSubscriber(clientA, categoryA);
+        raceResults.removeSubscriber(clientA, categoryA);
+        raceResults.send(message, categoryA);
+
+        verify(clientA, never()).receive(message);
     }
 
     public void unsubscribedClientShouldNotReceiveMessages() {
@@ -105,7 +117,7 @@ public class RaceResultsServiceTest {
 
     // remove Subscriber Should Not Remove Subscriber From All Categories
     @Test
-    public void removeShubscriberShouldNotRemoveSubscriberFromAlLCategories() {
+    public void removeShubscriberShouldNotRemoveSubscriberFromAllLCategories() {
         when(categoryB.getName()).thenReturn(Category.Name.F1);
         when(categoryA.getName()).thenReturn(Category.Name.Horses);
         raceResults.addSubscriber(clientA, categoryA);

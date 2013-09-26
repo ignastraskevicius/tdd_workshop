@@ -16,7 +16,7 @@ import java.util.HashSet;
 public class RaceResultsService {
 
     private Collection<Client> clients = new HashSet<Client>();
-    private Collection<Category> categoryList = new ArrayList<Category>();
+    private Collection<Category> categoryList = new HashSet<Category>();
 
 
     public void addSubscriber(Client client, Category category) {
