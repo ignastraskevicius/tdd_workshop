@@ -61,7 +61,7 @@ public class RaceResultsServiceTest {
 
     public void unsubscribedClientShouldNotReceiveMessages() {
         raceResults.addSubscriber(clientA, categoryA);
-        raceResults.removeSubscriber(clientA);
+        raceResults.removeSubscriber(clientA, categoryA);
         raceResults.send(message, categoryA);
         verify(clientA, never()).receive(message);
     }
@@ -102,5 +102,21 @@ public class RaceResultsServiceTest {
 
         verify(clientA, times(2)).receive(message);
     }
+
+    // remove Subscriber Should Not Remove Subscriber From All Categories
+    @Test
+    public void removeShubscriberShouldNotRemoveSubscriberFromAlLCategories() {
+        when(categoryB.getName()).thenReturn(Category.Name.F1);
+        when(categoryA.getName()).thenReturn(Category.Name.Horses);
+        raceResults.addSubscriber(clientA, categoryA);
+        raceResults.addSubscriber(clientA, categoryB);
+        raceResults.removeSubscriber(clientA, categoryA);
+
+        raceResults.send(message, categoryB);
+
+        verify(clientA).receive(message);
+    }
+
+
 }
 
