@@ -25,7 +25,7 @@ public class RaceResultsService {
     }
 
     public void send(Message message, final Category category) {
-        if(categoryList != null && isCategoryListContainsItemWithName(categoryList, category.getName())) {
+        if(categoryList != null && categoryList.contains(category)) {
             for (Client client : clients) {
                 client.receive(message);
             }
@@ -35,15 +35,4 @@ public class RaceResultsService {
     public void removeSubscriber(Client client, Category category) {
         categoryList.remove(category);
     }
-
-    private boolean isCategoryListContainsItemWithName(Collection<Category> categories, final Category.Name name) {
-        boolean contains = Iterables.any(categories, new Predicate<Category>() {
-            @Override
-            public boolean apply(Category ithCategory) {
-                return (name == ithCategory.getName());
-            }
-        });
-        return contains;
-    }
-
 }

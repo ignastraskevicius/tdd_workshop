@@ -27,8 +27,8 @@ public class RaceResultsServiceTest {
         clientA = mock(Client.class);
         clientB = mock(Client.class);
         message = mock(Message.class);
-        categoryA = mock(Category.class);
-        categoryB = mock(Category.class);
+        categoryA = Category.F1;
+        categoryB = Category.Horses;
     }
 
     public void notSubscribedClientShouldNotReceiveMessage() {
@@ -62,7 +62,6 @@ public class RaceResultsServiceTest {
     // removing multisubscriber of one category once should be enough to unsubscribe
     @Test
     public void removingMultisubscriberOfOneCategoryOnceShouldBeEnoughToUnsubscribe() {
-        when(categoryA.getName()).thenReturn(Category.Name.F1);
         raceResults.addSubscriber(clientA, categoryA);
         raceResults.addSubscriber(clientA, categoryA);
         raceResults.removeSubscriber(clientA, categoryA);
@@ -83,8 +82,6 @@ public class RaceResultsServiceTest {
 
     @Test
     public void subscriberShouldNotGetMessageIfCategoryNameIsNotTheSameHeSubscribedFor() {
-        when(categoryB.getName()).thenReturn(Category.Name.F1);
-        when(categoryA.getName()).thenReturn(Category.Name.Horses);
         raceResults.addSubscriber(clientA, categoryA);
         raceResults.send(message, categoryB);
         verify(clientA, never()).receive(message);
@@ -95,18 +92,14 @@ public class RaceResultsServiceTest {
     @Test
     public void subscriberShouldReceiveMessgeIfCategoryBothOneHeSubscribedAndOneMessageIsSentForHaveSameNames() {
 
-        when(categoryB.getName()).thenReturn(Category.Name.F1);
-        when(categoryA.getName()).thenReturn(Category.Name.F1);
         raceResults.addSubscriber(clientA, categoryA);
-        raceResults.send(message, categoryB);
+        raceResults.send(message, Category.F1);
         verify(clientA).receive(message);
     }
 
     // subscriber should subscriber for more than one category
     @Test
     public void subscriberShouldSubscribeForMoreThanOneCategory() {
-        when(categoryB.getName()).thenReturn(Category.Name.F1);
-        when(categoryA.getName()).thenReturn(Category.Name.Horses);
         raceResults.addSubscriber(clientA, categoryA);
         raceResults.addSubscriber(clientA, categoryB);
         raceResults.send(message, categoryA);
@@ -118,8 +111,6 @@ public class RaceResultsServiceTest {
     // remove Subscriber Should Not Remove Subscriber From All Categories
     @Test
     public void removeShubscriberShouldNotRemoveSubscriberFromAllLCategories() {
-        when(categoryB.getName()).thenReturn(Category.Name.F1);
-        when(categoryA.getName()).thenReturn(Category.Name.Horses);
         raceResults.addSubscriber(clientA, categoryA);
         raceResults.addSubscriber(clientA, categoryB);
         raceResults.removeSubscriber(clientA, categoryA);

@@ -7,10 +7,6 @@ package lt.ignas.test;
  * Time: 9:03 AM
  * To change this template use File | Settings | File Templates.
  */
-public class Category {
-    public Name getName() {
-        return null;
-    }
-
-    public enum Name {Horses, F1}
+public enum Category {
+    Horses, F1;
 }
