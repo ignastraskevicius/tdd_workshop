@@ -1,38 +1,27 @@
 package lt.ignas.test;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
+import com.google.common.collect.HashMultimap;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-
-/**
- * Practical Unit Testing with TestNG and Mockito - source code for examples.
- * Visit http://practicalunittesting.com for more information.
- *
- * @author Tomek Kaczanowski
- */
 public class RaceResultsService {
 
-    private Collection<Client> clients = new HashSet<Client>();
-    private Collection<Category> categoryList = new HashSet<Category>();
-
+    private HashMultimap<Client, Category> clientsSubscribedCategories = HashMultimap.create();
 
     public void addSubscriber(Client client, Category category) {
-        this.categoryList.add(category);
-        clients.add(client);
+        clientsSubscribedCategories.put(client, category);
     }
 
     public void send(Message message, final Category category) {
-        if(categoryList != null && categoryList.contains(category)) {
-            for (Client client : clients) {
+        for (Client client : clientsSubscribedCategories.keySet()) {
+            if(clientsSubscribedCategories.containsEntry(client, category)) {
                 client.receive(message);
             }
         }
     }
 
     public void removeSubscriber(Client client, Category category) {
-        categoryList.remove(category);
+        clientsSubscribedCategories.remove(client, category);
     }
+
+
 }
+

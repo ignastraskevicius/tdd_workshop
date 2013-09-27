@@ -110,7 +110,7 @@ public class RaceResultsServiceTest {
 
     // remove Subscriber Should Not Remove Subscriber From All Categories
     @Test
-    public void removeShubscriberShouldNotRemoveSubscriberFromAllLCategories() {
+    public void allCategoriesShouldNotBeUnsubscribedWhenUbsubscribingOnlyOne() {
         raceResults.addSubscriber(clientA, categoryA);
         raceResults.addSubscriber(clientA, categoryB);
         raceResults.removeSubscriber(clientA, categoryA);
@@ -120,6 +120,16 @@ public class RaceResultsServiceTest {
         verify(clientA).receive(message);
     }
 
+    // removal of one subscriber of a category should not remove all its subscribers
+    @Test
+    public void allSubscribersShouldNotBeRemovedWhenRemovingOnlyOne() {
+        raceResults.addSubscriber(clientA, categoryA);
+        raceResults.addSubscriber(clientB, categoryA);
+        raceResults.removeSubscriber(clientA, categoryA);
 
+        raceResults.send(message, categoryA);
+
+        verify(clientB).receive(message);
+    }
 }
 
