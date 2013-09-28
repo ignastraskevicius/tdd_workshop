@@ -13,7 +13,7 @@ import java.util.List;
 public class ReservationPlace {
     private static List<Classroom> classrooms;
 
-    public static List<Classroom> getClassrooms() {
+    public static List<Integer> getAllClassroomsIds() {
         return Collections.emptyList();
     }
 }
