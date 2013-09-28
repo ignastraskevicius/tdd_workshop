@@ -143,14 +143,6 @@ public class RaceResultsServiceTest {
         verify(clientB).receive(message);
     }
 
-    // should log sending
-    @Test
-    public void shouldLogSendingAMessage() {
-        raceResults.addSubscriber(clientA, categoryA);
-        raceResults.send(message, categoryA);
-        verify(log).log(anyString());
-    }
-
     // should not log sending when no message were sent
     @Test
     public void shouldNotLogSendingWhenNoMessageWereSent() {
