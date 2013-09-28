@@ -7,4 +7,5 @@ package lt.ignas.test;
  * @author Tomek Kaczanowski
  */
 public interface Message {
+    String getText();
 }

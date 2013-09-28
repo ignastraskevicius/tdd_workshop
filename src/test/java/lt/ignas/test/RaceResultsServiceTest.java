@@ -170,10 +170,13 @@ public class RaceResultsServiceTest {
         raceResults.send(message, categoryA);
         verify(log).log(eq(time), anyString());
     }
-
+    // should log message String
     // should log string
     @Test
-    public void shouldLogString() {
+    public void shouldLogMessageString() {
+
+        when(message.getText()).thenReturn("aa");
+
         raceResults.addSubscriber(clientA, categoryA);
         raceResults.send(message, categoryA);
         verify(log).log(anyString(), eq("aa"));
