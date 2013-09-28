@@ -172,7 +172,7 @@ public class RaceResultsServiceTest {
     }
 
     @DataProvider
-    public static final Object[][] getMessages() {
+    public static final Object[][] getMessageTexts() {
         return new Object[][] {
             {"text"},
             {"text text"},
@@ -183,14 +183,20 @@ public class RaceResultsServiceTest {
     // more cases
     // should log message String
     // should log string
-    @Test(dataProvider = "getMessages")
+    @Test(dataProvider = "getMessageTexts")
     public void shouldLogMessageString(String messageText) {
-
         when(message.getText()).thenReturn(messageText);
-
         raceResults.addSubscriber(clientA, categoryA);
         raceResults.send(message, categoryA);
         verify(log).log(anyString(), eq(messageText));
     }
+
+    // when not existent subscriber unsubscribes throw ISE
+    @Test(expectedExceptions = IllegalStateException.class)
+    public void shouldThrowISEWhenNotExistentSubscriberUnsubscribes() {
+        raceResults.removeSubscriber(clientA, categoryA);
+    }
+
+
 }
 

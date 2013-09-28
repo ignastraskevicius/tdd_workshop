@@ -23,7 +23,11 @@ public class RaceResultsService {
     }
 
     public void removeSubscriber(Client client, Category category) {
+        if(clientsSubscribedCategories.keys().contains(client))   {
         clientsSubscribedCategories.remove(client, category);
+        }                            else {
+            throw new IllegalStateException();
+        }
     }
 
 
