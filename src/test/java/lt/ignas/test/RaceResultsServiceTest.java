@@ -143,5 +143,14 @@ public class RaceResultsServiceTest {
         raceResults.send(message, categoryA);
         verify(log).log();
     }
+
+    // should not log sending when no message were sent
+    @Test
+    public void shouldNotLogSendingWhenNoMessageWereSent() {
+        raceResults.send(message, categoryA);
+        verify(log, never()).log();
+    }
+
+
 }
 

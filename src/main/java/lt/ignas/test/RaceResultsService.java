@@ -15,9 +15,10 @@ public class RaceResultsService {
         for (Client client : clientsSubscribedCategories.keySet()) {
             if(clientsSubscribedCategories.containsEntry(client, category)) {
                 client.receive(message);
+                logger.log();
             }
         }
-        logger.log();
+
     }
 
     public void removeSubscriber(Client client, Category category) {
