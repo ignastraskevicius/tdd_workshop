@@ -6,6 +6,7 @@ public class RaceResultsService {
 
     private HashMultimap<Client, Category> clientsSubscribedCategories = HashMultimap.create();
     private Logger logger;
+    private TimeProvider timeProvider;
 
     public void addSubscriber(Client client, Category category) {
         clientsSubscribedCategories.put(client, category);
@@ -15,7 +16,7 @@ public class RaceResultsService {
         for (Client client : clientsSubscribedCategories.keySet()) {
             if(clientsSubscribedCategories.containsEntry(client, category)) {
                 client.receive(message);
-                logger.log();
+                logger.log(timeProvider.getTime());
             }
         }
 
@@ -28,6 +29,10 @@ public class RaceResultsService {
 
     public void setLogger(Logger logger) {
         this.logger = logger;
+    }
+
+    public void setTimeProvider(TimeProvider timeProvider) {
+        this.timeProvider = timeProvider;
     }
 }
 

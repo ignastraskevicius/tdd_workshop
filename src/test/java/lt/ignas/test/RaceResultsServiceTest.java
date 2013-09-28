@@ -1,6 +1,7 @@
 package lt.ignas.test;
 
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
@@ -20,6 +21,7 @@ public class RaceResultsServiceTest {
     private Category categoryA;
     private Category categoryB;
     private Logger log;
+    private TimeProvider timeProvider;
 
     @BeforeMethod
     public void setUp() {
@@ -33,6 +35,11 @@ public class RaceResultsServiceTest {
 
         log = mock(Logger.class);
         raceResults.setLogger(log);
+
+
+        timeProvider = mock(TimeProvider.class);
+        raceResults.setTimeProvider(timeProvider);
+
     }
 
     public void notSubscribedClientShouldNotReceiveMessage() {
@@ -141,14 +148,35 @@ public class RaceResultsServiceTest {
     public void shouldLogSendingAMessage() {
         raceResults.addSubscriber(clientA, categoryA);
         raceResults.send(message, categoryA);
-        verify(log).log();
+        verify(log).log(anyString());
     }
 
     // should not log sending when no message were sent
     @Test
     public void shouldNotLogSendingWhenNoMessageWereSent() {
         raceResults.send(message, categoryA);
-        verify(log, never()).log();
+        verify(log, never()).log(anyString());
+    }
+
+    @DataProvider
+    public static final Object[][] getTimes() {
+        return new Object[][] {
+            {"10:10"},
+            {"11:20"},
+            {"12:30"}
+        };
+    }
+
+
+    // more cases
+    // should log time
+    @Test (dataProvider = "getTimes")
+    public void shouldLogTime(String time) {
+        when(timeProvider.getTime()).thenReturn(time);
+
+        raceResults.addSubscriber(clientA, categoryA);
+        raceResults.send(message, categoryA);
+        verify(log).log(time);
     }
 
 
