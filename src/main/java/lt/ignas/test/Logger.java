@@ -8,5 +8,5 @@ package lt.ignas.test;
  * To change this template use File | Settings | File Templates.
  */
 public interface Logger {
-    void log(String time);
+    void log(String time, String messageString);
 }

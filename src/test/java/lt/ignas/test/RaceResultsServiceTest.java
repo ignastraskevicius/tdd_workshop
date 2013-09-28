@@ -147,7 +147,7 @@ public class RaceResultsServiceTest {
     @Test
     public void shouldNotLogSendingWhenNoMessageWereSent() {
         raceResults.send(message, categoryA);
-        verify(log, never()).log(anyString());
+        verify(log, never()).log(anyString(), anyString());
     }
 
     @DataProvider
@@ -168,9 +168,15 @@ public class RaceResultsServiceTest {
 
         raceResults.addSubscriber(clientA, categoryA);
         raceResults.send(message, categoryA);
-        verify(log).log(time);
+        verify(log).log(eq(time), anyString());
     }
 
-
+    // should log string
+    @Test
+    public void shouldLogString() {
+        raceResults.addSubscriber(clientA, categoryA);
+        raceResults.send(message, categoryA);
+        verify(log).log(anyString(), eq("aa"));
+    }
 }
 
