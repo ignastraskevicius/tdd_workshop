@@ -197,6 +197,11 @@ public class RaceResultsServiceTest {
         raceResults.removeSubscriber(clientA, categoryA);
     }
 
-
+    // should Throw ISE When Unsubscribing From not subscribed category
+    @Test (expectedExceptions = IllegalStateException.class)
+    public void shouldThrowISEWhenUnsubscribingFromNotSubscribedCategory() {
+        raceResults.addSubscriber(clientA, categoryB);
+        raceResults.removeSubscriber(clientA, categoryA);
+    }
 }
 
