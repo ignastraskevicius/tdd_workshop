@@ -19,7 +19,7 @@ public class RaceResultsServiceTest {
     private Message message;
     private Category categoryA;
     private Category categoryB;
-
+    private Logger log;
 
     @BeforeMethod
     public void setUp() {
@@ -29,6 +29,10 @@ public class RaceResultsServiceTest {
         message = mock(Message.class);
         categoryA = Category.F1;
         categoryB = Category.Horses;
+
+
+        log = mock(Logger.class);
+        raceResults.setLogger(log);
     }
 
     public void notSubscribedClientShouldNotReceiveMessage() {
@@ -130,6 +134,14 @@ public class RaceResultsServiceTest {
         raceResults.send(message, categoryA);
 
         verify(clientB).receive(message);
+    }
+
+    // should log sending
+    @Test
+    public void shouldLogSendingAMessage() {
+        raceResults.addSubscriber(clientA, categoryA);
+        raceResults.send(message, categoryA);
+        verify(log).log();
     }
 }
 

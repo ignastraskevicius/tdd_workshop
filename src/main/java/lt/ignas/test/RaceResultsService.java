@@ -5,6 +5,7 @@ import com.google.common.collect.HashMultimap;
 public class RaceResultsService {
 
     private HashMultimap<Client, Category> clientsSubscribedCategories = HashMultimap.create();
+    private Logger logger;
 
     public void addSubscriber(Client client, Category category) {
         clientsSubscribedCategories.put(client, category);
@@ -16,6 +17,7 @@ public class RaceResultsService {
                 client.receive(message);
             }
         }
+        logger.log();
     }
 
     public void removeSubscriber(Client client, Category category) {
@@ -23,5 +25,8 @@ public class RaceResultsService {
     }
 
 
+    public void setLogger(Logger logger) {
+        this.logger = logger;
+    }
 }
 
