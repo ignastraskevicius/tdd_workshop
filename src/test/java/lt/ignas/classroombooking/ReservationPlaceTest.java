@@ -1,5 +1,11 @@
 package lt.ignas.classroombooking;
 
+import org.testng.annotations.Test;
+
+import java.util.Collections;
+
+import static org.testng.Assert.assertEquals;
+
 /**
  * Created with IntelliJ IDEA.
  * User: ignas
@@ -10,5 +16,8 @@ package lt.ignas.classroombooking;
 public class ReservationPlaceTest {
 
     //should be no classrooms to list initially
-
+    @Test
+    public void shouldBeNoClassroomsToListInitially() {
+        assertEquals(ReservationPlace.getClassrooms(), Collections.<Classroom>emptyList());
+    }
 }
