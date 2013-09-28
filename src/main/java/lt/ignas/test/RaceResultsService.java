@@ -16,7 +16,7 @@ public class RaceResultsService {
         for (Client client : clientsSubscribedCategories.keySet()) {
             if(clientsSubscribedCategories.containsEntry(client, category)) {
                 client.receive(message);
-                logger.log(timeProvider.getTime(), "aa");
+                logger.log(timeProvider.getTime(), message.getText());
             }
         }
 

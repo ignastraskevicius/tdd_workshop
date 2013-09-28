@@ -170,16 +170,27 @@ public class RaceResultsServiceTest {
         raceResults.send(message, categoryA);
         verify(log).log(eq(time), anyString());
     }
+
+    @DataProvider
+    public static final Object[][] getMessages() {
+        return new Object[][] {
+            {"text"},
+            {"text text"},
+            {"long msg"}
+        };
+    }
+
+    // more cases
     // should log message String
     // should log string
-    @Test
-    public void shouldLogMessageString() {
+    @Test(dataProvider = "getMessages")
+    public void shouldLogMessageString(String messageText) {
 
-        when(message.getText()).thenReturn("aa");
+        when(message.getText()).thenReturn(messageText);
 
         raceResults.addSubscriber(clientA, categoryA);
         raceResults.send(message, categoryA);
-        verify(log).log(anyString(), eq("aa"));
+        verify(log).log(anyString(), eq(messageText));
     }
 }
 
