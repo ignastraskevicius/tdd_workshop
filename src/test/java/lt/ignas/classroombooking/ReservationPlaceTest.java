@@ -47,6 +47,17 @@ public class ReservationPlaceTest {
         assertEquals(sut.getAllClassroomsIds(), asList(id));
     }
 
+    //shoud set more than one bookable classrooms in constructor
+    @Test
+    public void shouldSetMoreThanOneBOokableClassrooms() {
+        Classroom c1 = mock(Classroom.class);
+        when(c1.getId()).thenReturn(2);
+        Classroom c2 = mock(Classroom.class);
+        when(c2.getId()).thenReturn(4);
+        ReservationPlace sut = new ReservationPlace(asList(c1, c2));
+        assertEquals(sut.getAllClassroomsIds(), asList(2,4));
+    }
+
 
 
 }

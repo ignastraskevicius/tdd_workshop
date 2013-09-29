@@ -1,5 +1,9 @@
 package lt.ignas.classroombooking;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -18,12 +22,14 @@ public class ReservationPlace {
 
     public ReservationPlace(List<Classroom> classrooms) {
         this.classrooms = classrooms;
-
     }
 
-
     public List<Integer> getAllClassroomsIds() {
-        return classrooms.isEmpty() ?
-        Collections.<Integer>emptyList() : Arrays.asList(classrooms.get(0).getId());
+        return Lists.<Integer>newArrayList(Iterables.transform(classrooms, new Function<Classroom, Integer>() {
+            @Override
+            public Integer apply(lt.ignas.classroombooking.Classroom classroom) {
+                return classroom.getId();
+            }
+        }));
     }
 }
