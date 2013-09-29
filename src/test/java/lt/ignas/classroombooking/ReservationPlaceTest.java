@@ -99,6 +99,4 @@ public class ReservationPlaceTest {
         assertEquals(sut.getAvailableClassroomsIds(Weekday.MONDAY), asList(2, 4));
     }
 
-    // all rooms should remain bookable after booking one
-
 }
