@@ -1,5 +1,6 @@
 package lt.ignas.classroombooking;
 
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.util.Collections;
@@ -25,12 +26,26 @@ public class ReservationPlaceTest {
         assertEquals(sut.getAllClassroomsIds(), Collections.<Integer>emptyList());
     }
 
-    //should set bookable classrooms in constructor
-    @Test
-    public void shouldSetBookableClassroomsInConstructor() {
-        Classroom c = mock(Classroom.class);
-        when(c.getId()).thenReturn(1);
-        ReservationPlace sut = new ReservationPlace(asList(c));
-        assertEquals(sut.getAllClassroomsIds(), asList(1));
+    @DataProvider
+    public static final Object[][] getId() {
+        return new Object[][] {
+            {1},
+            {2},
+            {15}
+        };
     }
+
+
+    //different ids
+    //should set bookable classroom in constructor
+    @Test  (dataProvider = "getId")
+    public void shouldSetOneBookableClassroomInConstructor(Integer id) {
+        Classroom c = mock(Classroom.class);
+        when(c.getId()).thenReturn(id);
+        ReservationPlace sut = new ReservationPlace(asList(c));
+        assertEquals(sut.getAllClassroomsIds(), asList(id));
+    }
+
+
+
 }

@@ -1,5 +1,6 @@
 package lt.ignas.classroombooking;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -13,9 +14,10 @@ import java.util.List;
  */
 public class ReservationPlace {
 
-    boolean flag = false;
+    private List<Classroom> classrooms = new ArrayList<Classroom>();
+
     public ReservationPlace(List<Classroom> classrooms) {
-        flag = true;
+        this.classrooms = classrooms;
 
     }
 
@@ -25,6 +27,7 @@ public class ReservationPlace {
     }
 
     public List<Integer> getAllClassroomsIds() {
-        return flag ? Arrays.asList(1) : Collections.<Integer>emptyList();
+        return classrooms.isEmpty() ?
+        Collections.<Integer>emptyList() : Arrays.asList(classrooms.get(0).getId());
     }
 }
