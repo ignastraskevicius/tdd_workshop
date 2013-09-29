@@ -14,13 +14,6 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
-/**
- * Created with IntelliJ IDEA.
- * User: ignas
- * Date: 9/28/13
- * Time: 9:08 AM
- * To change this template use File | Settings | File Templates.
- */
 public class ReservationPlaceTest {
 
     Classroom c1;
@@ -41,7 +34,7 @@ public class ReservationPlaceTest {
     @Test
     public void shouldBeNoBookableClassroomsInitially() {
         ReservationPlace sut = new ReservationPlace(new ArrayList<Classroom>());
-        assertEquals(sut.getAllClassroomsIds(), Collections.<Integer>emptyList());
+        assertEquals(sut.getAllClassroomsIds(Weekday.MONDAY), Collections.<Integer>emptyList());
     }
 
     @DataProvider
@@ -61,7 +54,7 @@ public class ReservationPlaceTest {
         Classroom c = mock(Classroom.class);
         when(c.getId()).thenReturn(id);
         ReservationPlace sut = new ReservationPlace(asList(c));
-        assertEquals(sut.getAllClassroomsIds(), asList(id));
+        assertEquals(sut.getAllClassroomsIds(Weekday.MONDAY), asList(id));
     }
 
     //shoud set more than one bookable classrooms in constructor
@@ -72,16 +65,39 @@ public class ReservationPlaceTest {
         Classroom c2 = mock(Classroom.class);
         when(c2.getId()).thenReturn(4);
         ReservationPlace sut = new ReservationPlace(asList(c1, c2));
-        assertEquals(sut.getAllClassroomsIds(), asList(2,4));
+        assertEquals(sut.getAllClassroomsIds(Weekday.MONDAY), asList(2,4));
     }
 
+    @DataProvider
+    public static final Object[][] getBookedId() {
+        return new Object[][] {
+            {2},
+            {4}
+        };
+    }
+
+
+
+    // more cases
     // booked classroom should be unavailable
-    @Test
-    public void bookedClassroomShouldNotBeAvailable() {
-        sut.book(4);
-        assertFalse(sut.getAllClassroomsIds().contains(4));
+    @Test (dataProvider = "getBookedId")
+    public void bookedClassroomShouldNotBeAvailable(int id) {
+        sut.book(id);
+        assertFalse(sut.getAllClassroomsIds(Weekday.MONDAY).contains(id));
     }
 
+    // not booked classrom should be available
+    @Test
+    public void notBookedClasseoomShouldBeAvailable() {
+        sut.book(4);
+        assertTrue(sut.getAllClassroomsIds(Weekday.MONDAY).contains(2));
+    }
+
+    // for monday all classrooms should be available initially
+    @Test
+    public void forMondayAllClassroomsShouldBeAvailable() {
+        assertEquals(sut.getAllClassroomsIds(Weekday.MONDAY), asList(2, 4));
+    }
 
 
 }
