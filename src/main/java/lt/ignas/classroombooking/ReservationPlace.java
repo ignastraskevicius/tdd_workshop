@@ -11,9 +11,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class ReservationPlace {
-    private static List<Classroom> classrooms;
-
-    public static List<Integer> getAllClassroomsIds() {
+    public List<Integer> getAllClassroomsIds() {
         return Collections.emptyList();
     }
 }
