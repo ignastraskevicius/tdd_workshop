@@ -22,7 +22,7 @@ public class ReservationPlaceTest {
 
     //should be no classrooms to list initially
     @Test
-    public void shouldBeNoClassroomsToListInitially() {
+    public void shouldBeNoBookableClassroomsInitially() {
         ReservationPlace sut = new ReservationPlace(new ArrayList<Classroom>());
         assertEquals(sut.getAllClassroomsIds(), Collections.<Integer>emptyList());
     }
@@ -57,6 +57,8 @@ public class ReservationPlaceTest {
         ReservationPlace sut = new ReservationPlace(asList(c1, c2));
         assertEquals(sut.getAllClassroomsIds(), asList(2,4));
     }
+
+
 
 
 
