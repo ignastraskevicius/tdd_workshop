@@ -83,21 +83,22 @@ public class ReservationPlaceTest {
     @Test (dataProvider = "getBookedId")
     public void bookedClassroomShouldNotBeAvailable(int id) {
         sut.book(id);
-        assertFalse(sut.getAllClassroomsIds(Weekday.MONDAY).contains(id));
+        assertFalse(sut.getAvailableClassroomsIds(Weekday.MONDAY).contains(id));
     }
 
     // not booked classrom should be available
     @Test
     public void notBookedClasseoomShouldBeAvailable() {
         sut.book(4);
-        assertTrue(sut.getAllClassroomsIds(Weekday.MONDAY).contains(2));
+        assertTrue(sut.getAvailableClassroomsIds(Weekday.MONDAY).contains(2));
     }
 
     // for monday all classrooms should be available initially
     @Test
     public void forMondayAllClassroomsShouldBeAvailable() {
-        assertEquals(sut.getAllClassroomsIds(Weekday.MONDAY), asList(2, 4));
+        assertEquals(sut.getAvailableClassroomsIds(Weekday.MONDAY), asList(2, 4));
     }
 
+    // all rooms should remain bookable after booking one
 
 }

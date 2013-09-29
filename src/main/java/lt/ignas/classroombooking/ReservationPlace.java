@@ -25,7 +25,7 @@ public class ReservationPlace {
         this.classrooms = classrooms;
     }
 
-    public List<Integer> getAllClassroomsIds(Weekday weekday) {
+    public List<Integer> getAllClassroomsIds() {
 
         Iterable allClassromIds = Iterables.transform(classrooms, new Function<Classroom, Integer>() {
             @Override
@@ -34,6 +34,10 @@ public class ReservationPlace {
             }
         });
         return Lists.<Integer>newArrayList(allClassromIds);
+    }
+
+    public List<Integer> getAvailableClassroomsIds(Weekday weekday) {
+        return getAllClassroomsIds();
     }
 
     public void book(final int classroomId) {
