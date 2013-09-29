@@ -4,6 +4,9 @@ import org.testng.annotations.Test;
 
 import java.util.Collections;
 
+import static java.util.Arrays.asList;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 
 /**
@@ -20,5 +23,14 @@ public class ReservationPlaceTest {
     public void shouldBeNoClassroomsToListInitially() {
         ReservationPlace sut = new ReservationPlace();
         assertEquals(sut.getAllClassroomsIds(), Collections.<Integer>emptyList());
+    }
+
+    //should set bookable classrooms in constructor
+    @Test
+    public void shouldSetBookableClassroomsInConstructor() {
+        Classroom c = mock(Classroom.class);
+        when(c.getId()).thenReturn(1);
+        ReservationPlace sut = new ReservationPlace(asList(c));
+        assertEquals(sut.getAllClassroomsIds(), asList(1));
     }
 }

@@ -8,4 +8,5 @@ package lt.ignas.classroombooking;
  * To change this template use File | Settings | File Templates.
  */
 public interface Classroom {
+    int getId();
 }
