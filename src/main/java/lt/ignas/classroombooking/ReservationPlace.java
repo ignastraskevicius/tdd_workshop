@@ -21,10 +21,6 @@ public class ReservationPlace {
 
     }
 
-    public ReservationPlace() {
-
-
-    }
 
     public List<Integer> getAllClassroomsIds() {
         return classrooms.isEmpty() ?

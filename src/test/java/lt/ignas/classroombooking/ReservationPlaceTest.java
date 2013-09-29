@@ -3,6 +3,7 @@ package lt.ignas.classroombooking;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 import static java.util.Arrays.asList;
@@ -22,7 +23,7 @@ public class ReservationPlaceTest {
     //should be no classrooms to list initially
     @Test
     public void shouldBeNoClassroomsToListInitially() {
-        ReservationPlace sut = new ReservationPlace();
+        ReservationPlace sut = new ReservationPlace(new ArrayList<Classroom>());
         assertEquals(sut.getAllClassroomsIds(), Collections.<Integer>emptyList());
     }
 
