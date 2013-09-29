@@ -1,5 +1,6 @@
 package lt.ignas.classroombooking;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -10,6 +11,8 @@ import static java.util.Arrays.asList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,6 +22,20 @@ import static org.testng.Assert.assertEquals;
  * To change this template use File | Settings | File Templates.
  */
 public class ReservationPlaceTest {
+
+    Classroom c1;
+    Classroom c2;
+    ReservationPlace sut;
+
+    @BeforeMethod
+    public void setUp() {
+
+        c1 = mock(Classroom.class);
+        when(c1.getId()).thenReturn(2);
+        c2 = mock(Classroom.class);
+        when(c2.getId()).thenReturn(4);
+        sut = new ReservationPlace(new ArrayList(asList(c1, c2)));
+    }
 
     //should be no classrooms to list initially
     @Test
@@ -49,7 +66,7 @@ public class ReservationPlaceTest {
 
     //shoud set more than one bookable classrooms in constructor
     @Test
-    public void shouldSetMoreThanOneBOokableClassrooms() {
+    public void shouldSetMoreThanOneBookableClassrooms() {
         Classroom c1 = mock(Classroom.class);
         when(c1.getId()).thenReturn(2);
         Classroom c2 = mock(Classroom.class);
@@ -58,7 +75,12 @@ public class ReservationPlaceTest {
         assertEquals(sut.getAllClassroomsIds(), asList(2,4));
     }
 
-
+    // booked classroom should be unavailable
+    @Test
+    public void bookedClassroomShouldNotBeAvailable() {
+        sut.book(4);
+        assertFalse(sut.getAllClassroomsIds().contains(4));
+    }
 
 
 
