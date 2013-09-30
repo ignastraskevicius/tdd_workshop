@@ -39,8 +39,6 @@ public class ReservationPlace {
     }
 
     public void book(int classroomId, Weekday weekday) {
-
-       map.put(weekday, new ArrayList<Classroom>(map.get(weekday)));
        removeWithId(map.get(weekday), classroomId);
     }
 

@@ -21,6 +21,7 @@ public class ReservationPlaceTest {
     ReservationPlace sut;
 
     Weekday VALID_WEEKDAY = Weekday.MONDAY;
+    int VALID_CLASSROOM_ID = 4;
 
     @BeforeMethod
     public void setUp() {
@@ -150,4 +151,13 @@ public class ReservationPlaceTest {
     }
 
     // should book one room for more than one day
+    @Test
+    public void shouldBookOneRoomForMoreThanOneDay() {
+        sut.book(VALID_CLASSROOM_ID, Weekday.MONDAY);
+        sut.book(VALID_CLASSROOM_ID, Weekday.TUESDAY);
+        assertFalse(sut.getAvailableClassroomsIds(Weekday.MONDAY).contains(VALID_CLASSROOM_ID));
+        assertFalse(sut.getAvailableClassroomsIds(Weekday.TUESDAY).contains(VALID_CLASSROOM_ID));
+    }
+
+
 }
