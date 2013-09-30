@@ -101,7 +101,7 @@ public class ReservationPlaceTest {
 
     // booking a classroom should not remove classroom totally
     @Test
-    public void bokkingClassromShouldNotRemoveClassroomTotallt() {
+    public void bookingClassromShouldNotRemoveFromAllClassroomList() {
         sut.book(4);
         assertEquals(sut.getAllClassroomsIds(), asList(2,4));
     }

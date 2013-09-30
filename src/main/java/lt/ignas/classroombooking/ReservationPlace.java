@@ -28,17 +28,20 @@ public class ReservationPlace {
     }
 
     public List<Integer> getAllClassroomsIds() {
-        Iterable allClassromIds = Iterables.transform(classrooms, new Function<Classroom, Integer>() {
-            @Override
-            public Integer apply(lt.ignas.classroombooking.Classroom classroom) {
-                return classroom.getId();
-            }
-        });
-        return Lists.<Integer>newArrayList(allClassromIds);
+        return extractIds(classrooms);
     }
 
     public List<Integer> getAvailableClassroomsIds(Weekday weekday) {
-        Iterable allClassromIds = Iterables.transform(booked, new Function<Classroom, Integer>() {
+        return extractIds(booked);
+    }
+
+    public void book(int classroomId) {
+       booked = new ArrayList<Classroom>(classrooms);
+       removeWithId(booked, classroomId);
+    }
+
+    private List<Integer> extractIds(List<Classroom> classroomList) {
+        Iterable allClassromIds = Iterables.transform(classroomList, new Function<Classroom, Integer>() {
             @Override
             public Integer apply(lt.ignas.classroombooking.Classroom classroom) {
                 return classroom.getId();
@@ -47,15 +50,13 @@ public class ReservationPlace {
         return Lists.<Integer>newArrayList(allClassromIds);
     }
 
-    public void book(final int classroomId) {
-         booked = new ArrayList<Classroom>(classrooms);
-        Iterables.removeIf(booked, new Predicate<Classroom>() {
+    private void removeWithId(List<Classroom> classroomList, final int classroomId) {
+        Iterables.removeIf(classroomList, new Predicate<Classroom>() {
             @Override
             public boolean apply(lt.ignas.classroombooking.Classroom classroom) {
                 return classroom.getId() == classroomId;
             }
         });
     }
-
 
 }
