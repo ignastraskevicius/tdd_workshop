@@ -152,7 +152,7 @@ public class ReservationPlaceTest {
 
     // should book one room for more than one day
     @Test
-    public void shouldBookOneRoomForMoreThanOneDay() {
+    public void shouldBookOneRoomForTwoOrMoreSeparateDay() {
         sut.book(VALID_CLASSROOM_ID, Weekday.MONDAY);
         sut.book(VALID_CLASSROOM_ID, Weekday.TUESDAY);
         assertFalse(sut.getAvailableClassroomsIds(Weekday.MONDAY).contains(VALID_CLASSROOM_ID));
