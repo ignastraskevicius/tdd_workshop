@@ -6,7 +6,9 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,13 +20,14 @@ import java.util.List;
 public class ReservationPlace {
 
     private List<Classroom> classrooms = new ArrayList<Classroom>();
-    private List<Classroom> bookedForMonday = new ArrayList<Classroom>();
-    private List<Classroom> bookedForTuesday = new ArrayList<Classroom>();
+    Map<Weekday, List<Classroom>> map = new HashMap<Weekday, List<Classroom>>();
+
 
     public ReservationPlace(List<Classroom> classrooms) {
         this.classrooms = classrooms;
-        bookedForMonday = new ArrayList<Classroom>(classrooms);
-        bookedForTuesday = new ArrayList<Classroom>(classrooms);
+        for(Weekday weekday: Weekday.values()) {
+            map.put(weekday, new ArrayList<Classroom>(classrooms));
+        }
     }
 
     public List<Integer> getAllClassroomsIds() {
@@ -32,18 +35,13 @@ public class ReservationPlace {
     }
 
     public List<Integer> getAvailableClassroomsIds(Weekday weekday) {
-
-        return weekday == Weekday.MONDAY ? extractIds(bookedForMonday) : extractIds(bookedForTuesday);
+        return extractIds(map.get(weekday));
     }
 
     public void book(int classroomId, Weekday weekday) {
-        if(weekday == Weekday.MONDAY) {
-       bookedForMonday = new ArrayList<Classroom>(classrooms);
-       removeWithId(bookedForMonday, classroomId);
-        } else {
-            bookedForTuesday = new ArrayList<Classroom>(classrooms);
-            removeWithId(bookedForTuesday, classroomId);
-        }
+
+       map.put(weekday, new ArrayList<Classroom>(classrooms));
+       removeWithId(map.get(weekday), classroomId);
     }
 
     private List<Integer> extractIds(List<Classroom> classroomList) {
@@ -64,5 +62,4 @@ public class ReservationPlace {
             }
         });
     }
-
 }

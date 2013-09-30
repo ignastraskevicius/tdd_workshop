@@ -98,7 +98,12 @@ public class ReservationPlaceTest {
     public static final Object[][] getWeekday() {
         return new Object[][] {
             {Weekday.MONDAY},
-            {Weekday.TUESDAY}
+            {Weekday.TUESDAY},
+            {Weekday.WEDNESDAY},
+            {Weekday.THURSDAY},
+            {Weekday.FRIDAY},
+            {Weekday.SATURDAY},
+            {Weekday.SUNDAY}
         };
     }
 
@@ -120,15 +125,16 @@ public class ReservationPlaceTest {
     public static final Object[][] getWeekdayPairs() {
         return new Object[][] {
             {Weekday.MONDAY, Weekday.TUESDAY},
-            {Weekday.TUESDAY, Weekday.MONDAY}
-
+            {Weekday.TUESDAY, Weekday.MONDAY},
+            {Weekday.WEDNESDAY, Weekday.SATURDAY},
+            {Weekday.SATURDAY, Weekday.WEDNESDAY}
         };
     }
 
     // more cases
     // classroom for tuesday should remain available when booking for monday
     @Test  (dataProvider = "getWeekdayPairs")
-    public void bookingForSeparateDayRemainClassroomAvailable(Weekday weekdayToBook, Weekday weekdayToVerify) {
+    public void bookingForSeparateDayShouldRemainClassroomAvailable(Weekday weekdayToBook, Weekday weekdayToVerify) {
         sut.book(4, weekdayToBook);
         assertEquals(sut.getAvailableClassroomsIds(weekdayToVerify), asList(2,4));
     }

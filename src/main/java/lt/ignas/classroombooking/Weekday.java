@@ -8,6 +8,5 @@ package lt.ignas.classroombooking;
  * To change this template use File | Settings | File Templates.
  */
 public enum Weekday {
-    TUESDAY, MONDAY
-
+    MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
 }
