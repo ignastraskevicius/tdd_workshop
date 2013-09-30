@@ -20,13 +20,14 @@ import java.util.List;
 public class ReservationPlace {
 
     private List<Classroom> classrooms = new ArrayList<Classroom>();
+    private List<Classroom> booked = new ArrayList<Classroom>();
 
     public ReservationPlace(List<Classroom> classrooms) {
         this.classrooms = classrooms;
+        booked = new ArrayList<Classroom>(classrooms);
     }
 
     public List<Integer> getAllClassroomsIds() {
-
         Iterable allClassromIds = Iterables.transform(classrooms, new Function<Classroom, Integer>() {
             @Override
             public Integer apply(lt.ignas.classroombooking.Classroom classroom) {
@@ -37,11 +38,18 @@ public class ReservationPlace {
     }
 
     public List<Integer> getAvailableClassroomsIds(Weekday weekday) {
-        return getAllClassroomsIds();
+        Iterable allClassromIds = Iterables.transform(booked, new Function<Classroom, Integer>() {
+            @Override
+            public Integer apply(lt.ignas.classroombooking.Classroom classroom) {
+                return classroom.getId();
+            }
+        });
+        return Lists.<Integer>newArrayList(allClassromIds);
     }
 
     public void book(final int classroomId) {
-        Iterables.removeIf(classrooms, new Predicate<Classroom>() {
+         booked = new ArrayList<Classroom>(classrooms);
+        Iterables.removeIf(booked, new Predicate<Classroom>() {
             @Override
             public boolean apply(lt.ignas.classroombooking.Classroom classroom) {
                 return classroom.getId() == classroomId;

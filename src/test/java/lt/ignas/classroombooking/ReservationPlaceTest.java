@@ -34,7 +34,7 @@ public class ReservationPlaceTest {
     @Test
     public void shouldBeNoBookableClassroomsInitially() {
         ReservationPlace sut = new ReservationPlace(new ArrayList<Classroom>());
-        assertEquals(sut.getAllClassroomsIds(Weekday.MONDAY), Collections.<Integer>emptyList());
+        assertEquals(sut.getAllClassroomsIds(), Collections.<Integer>emptyList());
     }
 
     @DataProvider
@@ -54,7 +54,7 @@ public class ReservationPlaceTest {
         Classroom c = mock(Classroom.class);
         when(c.getId()).thenReturn(id);
         ReservationPlace sut = new ReservationPlace(asList(c));
-        assertEquals(sut.getAllClassroomsIds(Weekday.MONDAY), asList(id));
+        assertEquals(sut.getAllClassroomsIds(), asList(id));
     }
 
     //shoud set more than one bookable classrooms in constructor
@@ -65,7 +65,7 @@ public class ReservationPlaceTest {
         Classroom c2 = mock(Classroom.class);
         when(c2.getId()).thenReturn(4);
         ReservationPlace sut = new ReservationPlace(asList(c1, c2));
-        assertEquals(sut.getAllClassroomsIds(Weekday.MONDAY), asList(2,4));
+        assertEquals(sut.getAllClassroomsIds(), asList(2,4));
     }
 
     @DataProvider
@@ -99,4 +99,10 @@ public class ReservationPlaceTest {
         assertEquals(sut.getAvailableClassroomsIds(Weekday.MONDAY), asList(2, 4));
     }
 
+    // booking a classroom should not remove classroom totally
+    @Test
+    public void bokkingClassromShouldNotRemoveClassroomTotallt() {
+        sut.book(4);
+        assertEquals(sut.getAllClassroomsIds(), asList(2,4));
+    }
 }
