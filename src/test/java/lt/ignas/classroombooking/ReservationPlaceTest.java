@@ -116,11 +116,21 @@ public class ReservationPlaceTest {
         assertEquals(sut.getAllClassroomsIds(), asList(2,4));
     }
 
+    @DataProvider
+    public static final Object[][] getWeekdayPairs() {
+        return new Object[][] {
+            {Weekday.MONDAY, Weekday.TUESDAY},
+            {Weekday.TUESDAY, Weekday.MONDAY}
+
+        };
+    }
+
+    // more cases
     // classroom for tuesday should remain available when booking for monday
-    @Test
-    public void classroomForTuesdayShouldRemainAvailableWhenBookingForMonday() {
-        sut.book(4, Weekday.MONDAY);
-        assertEquals(sut.getAvailableClassroomsIds(Weekday.TUESDAY), asList(2,4));
+    @Test  (dataProvider = "getWeekdayPairs")
+    public void bookingForSeparateDayRemainClassroomAvailable(Weekday weekdayToBook, Weekday weekdayToVerify) {
+        sut.book(4, weekdayToBook);
+        assertEquals(sut.getAvailableClassroomsIds(weekdayToVerify), asList(2,4));
     }
 
 

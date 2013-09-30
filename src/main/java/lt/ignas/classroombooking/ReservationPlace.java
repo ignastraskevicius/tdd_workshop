@@ -19,12 +19,12 @@ public class ReservationPlace {
 
     private List<Classroom> classrooms = new ArrayList<Classroom>();
     private List<Classroom> bookedForMonday = new ArrayList<Classroom>();
-    private List<Classroom> tuesdayForTuesday = new ArrayList<Classroom>();
+    private List<Classroom> bookedForTuesday = new ArrayList<Classroom>();
 
     public ReservationPlace(List<Classroom> classrooms) {
         this.classrooms = classrooms;
         bookedForMonday = new ArrayList<Classroom>(classrooms);
-        tuesdayForTuesday = new ArrayList<Classroom>(classrooms);
+        bookedForTuesday = new ArrayList<Classroom>(classrooms);
     }
 
     public List<Integer> getAllClassroomsIds() {
@@ -33,12 +33,17 @@ public class ReservationPlace {
 
     public List<Integer> getAvailableClassroomsIds(Weekday weekday) {
 
-        return weekday == Weekday.MONDAY ? extractIds(bookedForMonday) : extractIds(tuesdayForTuesday);
+        return weekday == Weekday.MONDAY ? extractIds(bookedForMonday) : extractIds(bookedForTuesday);
     }
 
     public void book(int classroomId, Weekday weekday) {
+        if(weekday == Weekday.MONDAY) {
        bookedForMonday = new ArrayList<Classroom>(classrooms);
        removeWithId(bookedForMonday, classroomId);
+        } else {
+            bookedForTuesday = new ArrayList<Classroom>(classrooms);
+            removeWithId(bookedForTuesday, classroomId);
+        }
     }
 
     private List<Integer> extractIds(List<Classroom> classroomList) {
