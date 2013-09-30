@@ -82,27 +82,46 @@ public class ReservationPlaceTest {
     // booked classroom should be unavailable
     @Test (dataProvider = "getBookedId")
     public void bookedClassroomShouldNotBeAvailable(int id) {
-        sut.book(id);
+        sut.book(id, Weekday.MONDAY);
         assertFalse(sut.getAvailableClassroomsIds(Weekday.MONDAY).contains(id));
     }
 
     // not booked classrom should be available
     @Test
     public void notBookedClasseoomShouldBeAvailable() {
-        sut.book(4);
+        sut.book(4, Weekday.MONDAY);
         assertTrue(sut.getAvailableClassroomsIds(Weekday.MONDAY).contains(2));
     }
 
+
+    @DataProvider
+    public static final Object[][] getWeekday() {
+        return new Object[][] {
+            {Weekday.MONDAY},
+            {Weekday.TUESDAY}
+        };
+    }
+
+    // all cases
     // for monday all classrooms should be available initially
-    @Test
-    public void forMondayAllClassroomsShouldBeAvailable() {
-        assertEquals(sut.getAvailableClassroomsIds(Weekday.MONDAY), asList(2, 4));
+    @Test (dataProvider = "getWeekday")
+    public void forAllWeekdaysAllClassroomsShouldBeAvailableInitially(Weekday weekday) {
+        assertEquals(sut.getAvailableClassroomsIds(weekday), asList(2, 4));
     }
 
     // booking a classroom should not remove classroom totally
     @Test
     public void bookingClassromShouldNotRemoveFromAllClassroomList() {
-        sut.book(4);
+        sut.book(4, Weekday.MONDAY);
         assertEquals(sut.getAllClassroomsIds(), asList(2,4));
     }
+
+    // classroom for tuesday should remain available when booking for monday
+    @Test
+    public void classroomForTuesdayShouldRemainAvailableWhenBookingForMonday() {
+        sut.book(4, Weekday.MONDAY);
+        assertEquals(sut.getAvailableClassroomsIds(Weekday.TUESDAY), asList(2,4));
+    }
+
+
 }

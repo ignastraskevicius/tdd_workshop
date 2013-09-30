@@ -6,8 +6,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -20,11 +18,13 @@ import java.util.List;
 public class ReservationPlace {
 
     private List<Classroom> classrooms = new ArrayList<Classroom>();
-    private List<Classroom> booked = new ArrayList<Classroom>();
+    private List<Classroom> bookedForMonday = new ArrayList<Classroom>();
+    private List<Classroom> tuesdayForTuesday = new ArrayList<Classroom>();
 
     public ReservationPlace(List<Classroom> classrooms) {
         this.classrooms = classrooms;
-        booked = new ArrayList<Classroom>(classrooms);
+        bookedForMonday = new ArrayList<Classroom>(classrooms);
+        tuesdayForTuesday = new ArrayList<Classroom>(classrooms);
     }
 
     public List<Integer> getAllClassroomsIds() {
@@ -32,12 +32,13 @@ public class ReservationPlace {
     }
 
     public List<Integer> getAvailableClassroomsIds(Weekday weekday) {
-        return extractIds(booked);
+
+        return weekday == Weekday.MONDAY ? extractIds(bookedForMonday) : extractIds(tuesdayForTuesday);
     }
 
-    public void book(int classroomId) {
-       booked = new ArrayList<Classroom>(classrooms);
-       removeWithId(booked, classroomId);
+    public void book(int classroomId, Weekday weekday) {
+       bookedForMonday = new ArrayList<Classroom>(classrooms);
+       removeWithId(bookedForMonday, classroomId);
     }
 
     private List<Integer> extractIds(List<Classroom> classroomList) {
