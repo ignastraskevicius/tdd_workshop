@@ -139,5 +139,13 @@ public class ReservationPlaceTest {
         assertEquals(sut.getAvailableClassroomsIds(weekdayToVerify), asList(2,4));
     }
 
+    // should book more than one classroom for one day
+    @Test
+    public void shouldBookMoreThanOneClassroomForOneDay() {
+        sut.book(4, Weekday.MONDAY);
+        sut.book(2, Weekday.MONDAY);
+        assertEquals(sut.getAvailableClassroomsIds(Weekday.MONDAY), Collections.emptyList());
+    }
+
 
 }
