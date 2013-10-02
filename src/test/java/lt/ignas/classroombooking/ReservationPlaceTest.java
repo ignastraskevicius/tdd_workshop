@@ -2,6 +2,7 @@ package lt.ignas.classroombooking;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -27,20 +28,24 @@ public class ReservationPlaceTest {
 
     ReservationPlace sut;
 
-    List<HourOfWeek> possibleTimes = new ArrayList<HourOfWeek>();
-
-    HourOfWeek sunday8AM = mockTime(possibleTimes, HourOfWeek.Weekday.SUNDAY, Hour.AM_8);
-    HourOfWeek sunday6PM = mockTime(possibleTimes, HourOfWeek.Weekday.SUNDAY, Hour.PM_6);
-    HourOfWeek monday8AM = mockTime(possibleTimes, HourOfWeek.Weekday.MONDAY, Hour.AM_8);
-    HourOfWeek monday6PM = mockTime(possibleTimes, HourOfWeek.Weekday.MONDAY, Hour.PM_6);
-    HourOfWeek VALID_TIME  = sunday8AM;
+    HourOfWeek sunday8AM;
+    HourOfWeek sunday6PM;
+    HourOfWeek monday8AM;
+    HourOfWeek monday6PM;
+    HourOfWeek VALID_TIME;
 
     TimeProvider timeProvider;
 
-    private static Logger logger = LoggerFactory.getLogger(ReservationPlaceTest.class.getName());
+    @BeforeClass
+    public void setUpConstants() {
+        List<HourOfWeek> possibleTimes = new ArrayList<HourOfWeek>();
+        sunday8AM = mockTime(possibleTimes, HourOfWeek.Weekday.SUNDAY, Hour.AM_8);
+        sunday6PM = mockTime(possibleTimes, HourOfWeek.Weekday.SUNDAY, Hour.PM_6);
+        monday8AM = mockTime(possibleTimes, HourOfWeek.Weekday.MONDAY, Hour.AM_8);
+        monday6PM = mockTime(possibleTimes, HourOfWeek.Weekday.MONDAY, Hour.PM_6);
 
-    @BeforeMethod
-    public void setUp() {
+        VALID_TIME = sunday8AM;
+
         timeProvider = mock(TimeProvider.class);
         when(timeProvider.values()).thenReturn(possibleTimes);
 
@@ -48,9 +53,11 @@ public class ReservationPlaceTest {
         when(classroom1.getId()).thenReturn(ID_CLASSROOM_1);
         classroom2 = mock(Classroom.class);
         when(classroom2.getId()).thenReturn(ID_CLASSROOM_2);
+    }
 
+    @BeforeMethod
+    public void setUpSutAndDependencies() {
         sut = new ReservationPlace();
-
         sut.setProvider(timeProvider);
         sut.setBookableClassrooms(new ArrayList(asList(classroom1, classroom2)));
     }
@@ -138,7 +145,6 @@ public class ReservationPlaceTest {
        return new Object[][] {
             {sunday8AM, sunday6PM},
             {sunday6PM, sunday8AM},
-
             {sunday6PM, monday8AM},
             {monday8AM, sunday6PM}
         };
@@ -147,7 +153,6 @@ public class ReservationPlaceTest {
     @Test  (dataProvider = "getWeekdayPairs")
     public void bookingForSeparateDayShouldRemainClassroomAvailable(HourOfWeek timeToBook, HourOfWeek timeToVerify) {
         sut.book(ID_CLASSROOM_2, timeToBook);
-
         assertEquals(sut.getAvailableClassroomsIds(timeToVerify), asList(ID_CLASSROOM_1,ID_CLASSROOM_2));
     }
 
@@ -178,4 +183,7 @@ public class ReservationPlaceTest {
         allDays.add(time);
         return time;
     }
+
+    //should book any room havin requested size
+
 }
