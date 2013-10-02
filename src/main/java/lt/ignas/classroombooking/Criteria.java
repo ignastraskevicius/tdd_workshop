@@ -3,12 +3,12 @@ package lt.ignas.classroombooking;
 /**
  * Created with IntelliJ IDEA.
  * User: ignas
- * Date: 9/28/13
- * Time: 9:13 AM
+ * Date: 10/2/13
+ * Time: 2:33 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface Classroom {
-    int getId();
+public interface Criteria {
+    HourOfWeek getTime();
 
     int getSize();
 }

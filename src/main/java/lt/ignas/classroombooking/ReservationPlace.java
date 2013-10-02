@@ -69,4 +69,8 @@ public class ReservationPlace   {
     public void setProvider(TimeProvider provider) {
         this.provider = provider;
     }
+
+    public void book(Criteria criteria) {
+        throw new IllegalStateException();
+    }
 }

@@ -1,7 +1,5 @@
 package lt.ignas.classroombooking;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -184,6 +182,15 @@ public class ReservationPlaceTest {
         return time;
     }
 
-    //should book any room havin requested size
+    //should throw ISE when booking classroom with size larger than lasgest
+    @Test    (expectedExceptions = IllegalStateException.class)
+    public void shouldThrowISEWhenBookingClassroomWithSizeLargerThanLargest() {
+        when(classroom1.getSize()).thenReturn(10);
+        when(classroom2.getSize()).thenReturn(10);
+        Criteria criteria = mock(Criteria.class);
+        when(criteria.getTime()).thenReturn(sunday6PM);
+        when(criteria.getSize()).thenReturn(15);
+        sut.book(criteria);
+    }
 
 }
