@@ -17,35 +17,32 @@ import java.util.Map;
  * Time: 9:11 AM
  * To change this template use File | Settings | File Templates.
  */
-public class ReservationPlace {
 
-    private List<Classroom> classrooms = new ArrayList<Classroom>();
-    Map<Weekday, List<Classroom>> map = new HashMap<Weekday, List<Classroom>>();
+public class ReservationPlace   {
 
+    private List<Classroom> bookableClassrooms = new ArrayList<Classroom>();
+    private Map<HourOfWeek, List<Classroom>> map = new HashMap<HourOfWeek, List<Classroom>>();
+    private TimeProvider provider;
 
-    public ReservationPlace(List<Classroom> classrooms) {
-        this.classrooms = classrooms;
-        for(Weekday weekday: Weekday.values()) {
-            map.put(weekday, new ArrayList<Classroom>(classrooms));
-        }
-    }
 
     public List<Integer> getAllClassroomsIds() {
-        return extractIds(classrooms);
+        return extractIds(bookableClassrooms);
     }
 
-    public List<Integer> getAvailableClassroomsIds(Weekday weekday) {
-        return extractIds(map.get(weekday));
+    public List<Integer> getAvailableClassroomsIds(HourOfWeek hourOfWeek) {
+        return extractIds(map.get(hourOfWeek));
     }
 
-    public void book(int classroomId, Weekday weekday) {
-       removeWithId(map.get(weekday), classroomId);
+    public void book(int classroomId, HourOfWeek hourOfWeek) {
+       List<Classroom> classrooms = map.get(hourOfWeek);
+       removeWithId(classrooms, classroomId);
     }
 
     private List<Integer> extractIds(List<Classroom> classroomList) {
         Iterable allClassromIds = Iterables.transform(classroomList, new Function<Classroom, Integer>() {
             @Override
             public Integer apply(lt.ignas.classroombooking.Classroom classroom) {
+
                 return classroom.getId();
             }
         });
@@ -59,5 +56,17 @@ public class ReservationPlace {
                 return classroom.getId() == classroomId;
             }
         });
+    }
+
+    public void setBookableClassrooms(List<Classroom> bookableClassrooms) {
+        this.bookableClassrooms = bookableClassrooms;
+
+        for(HourOfWeek hourOfWeek: provider.values()) {
+            map.put(hourOfWeek, new ArrayList<Classroom>(this.bookableClassrooms));
+        }
+    }
+
+    public void setProvider(TimeProvider provider) {
+        this.provider = provider;
     }
 }

@@ -1,163 +1,181 @@
 package lt.ignas.classroombooking;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
+@Test
 public class ReservationPlaceTest {
 
-    Classroom c1;
-    Classroom c2;
+    Classroom classroom1;
+    Classroom classroom2;
+    final int ID_CLASSROOM_1 = 2;
+    final int ID_CLASSROOM_2 = 4;
+    int VALID_CLASSROOM_ID = ID_CLASSROOM_2;
+
     ReservationPlace sut;
 
-    Weekday VALID_WEEKDAY = Weekday.MONDAY;
-    int VALID_CLASSROOM_ID = 4;
+    List<HourOfWeek> possibleTimes = new ArrayList<HourOfWeek>();
+
+    HourOfWeek sunday8AM = mockTime(possibleTimes, HourOfWeek.Weekday.SUNDAY, Hour.AM_8);
+    HourOfWeek sunday6PM = mockTime(possibleTimes, HourOfWeek.Weekday.SUNDAY, Hour.PM_6);
+    HourOfWeek monday8AM = mockTime(possibleTimes, HourOfWeek.Weekday.MONDAY, Hour.AM_8);
+    HourOfWeek monday6PM = mockTime(possibleTimes, HourOfWeek.Weekday.MONDAY, Hour.PM_6);
+    HourOfWeek VALID_TIME  = sunday8AM;
+
+    TimeProvider timeProvider;
+
+    private static Logger logger = LoggerFactory.getLogger(ReservationPlaceTest.class.getName());
 
     @BeforeMethod
     public void setUp() {
+        timeProvider = mock(TimeProvider.class);
+        when(timeProvider.values()).thenReturn(possibleTimes);
 
-        c1 = mock(Classroom.class);
-        when(c1.getId()).thenReturn(2);
-        c2 = mock(Classroom.class);
-        when(c2.getId()).thenReturn(4);
-        sut = new ReservationPlace(new ArrayList(asList(c1, c2)));
+        classroom1 = mock(Classroom.class);
+        when(classroom1.getId()).thenReturn(ID_CLASSROOM_1);
+        classroom2 = mock(Classroom.class);
+        when(classroom2.getId()).thenReturn(ID_CLASSROOM_2);
+
+        sut = new ReservationPlace();
+
+        sut.setProvider(timeProvider);
+        sut.setBookableClassrooms(new ArrayList(asList(classroom1, classroom2)));
     }
 
-    //should be no classrooms to list initially
     @Test
     public void shouldBeNoBookableClassroomsInitially() {
-        ReservationPlace sut = new ReservationPlace(new ArrayList<Classroom>());
+        ReservationPlace sut = new ReservationPlace();
+        sut.setProvider(timeProvider);
         assertEquals(sut.getAllClassroomsIds(), Collections.<Integer>emptyList());
     }
 
     @DataProvider
-    public static final Object[][] getId() {
+    public final Object[][] getId() {
         return new Object[][] {
-            {1},
-            {2},
-            {15}
+            {ID_CLASSROOM_1},
+            {ID_CLASSROOM_2}
         };
     }
 
-
-    //different ids
-    //should set bookable classroom in constructor
     @Test  (dataProvider = "getId")
-    public void shouldSetOneBookableClassroomInConstructor(Integer id) {
+    public void shouldSetOneBookableClassroom(Integer id) {
         Classroom c = mock(Classroom.class);
         when(c.getId()).thenReturn(id);
-        ReservationPlace sut = new ReservationPlace(asList(c));
+        ReservationPlace sut = new ReservationPlace();
+        sut.setProvider(timeProvider);
+        sut.setBookableClassrooms(asList(c));
         assertEquals(sut.getAllClassroomsIds(), asList(id));
     }
 
-    //shoud set more than one bookable classrooms in constructor
     @Test
     public void shouldSetMoreThanOneBookableClassrooms() {
-        Classroom c1 = mock(Classroom.class);
-        when(c1.getId()).thenReturn(2);
-        Classroom c2 = mock(Classroom.class);
-        when(c2.getId()).thenReturn(4);
-        ReservationPlace sut = new ReservationPlace(asList(c1, c2));
-        assertEquals(sut.getAllClassroomsIds(), asList(2,4));
+        ReservationPlace sut = new ReservationPlace();
+        sut.setProvider(timeProvider);
+        sut.setBookableClassrooms(asList(classroom1, classroom2));
+        assertEquals(sut.getAllClassroomsIds(), asList(ID_CLASSROOM_1, ID_CLASSROOM_2));
     }
 
     @DataProvider
-    public static final Object[][] getBookedId() {
+    public final Object[][] getBookedId() {
         return new Object[][] {
-            {2},
-            {4}
+            {ID_CLASSROOM_1},
+            {ID_CLASSROOM_2}
         };
     }
 
-
-
-    // more cases
-    // booked classroom should be unavailable
     @Test (dataProvider = "getBookedId")
     public void bookedClassroomShouldNotBeAvailable(int id) {
-        sut.book(id, Weekday.MONDAY);
-        assertFalse(sut.getAvailableClassroomsIds(Weekday.MONDAY).contains(id));
+        sut.book(id, monday8AM);
+        assertFalse(sut.getAvailableClassroomsIds(monday8AM).contains(id));
     }
 
-    // not booked classrom should be available
     @Test
     public void notBookedClasseoomShouldBeAvailable() {
-        sut.book(4, Weekday.MONDAY);
-        assertTrue(sut.getAvailableClassroomsIds(Weekday.MONDAY).contains(2));
+        sut.book(ID_CLASSROOM_2, monday8AM);
+        assertTrue(sut.getAvailableClassroomsIds(monday8AM).contains(ID_CLASSROOM_1));
     }
 
 
     @DataProvider
-    public static final Object[][] getWeekday() {
+    public final Object[][] getWeekday() {
         return new Object[][] {
-            {Weekday.MONDAY},
-            {Weekday.TUESDAY},
-            {Weekday.WEDNESDAY},
-            {Weekday.THURSDAY},
-            {Weekday.FRIDAY},
-            {Weekday.SATURDAY},
-            {Weekday.SUNDAY}
+            {sunday8AM},
+            {sunday6PM},
+            {monday8AM},
+            {monday6PM}
         };
     }
 
-    // all cases
-    // for monday all classrooms should be available initially
     @Test (dataProvider = "getWeekday")
-    public void forAllWeekdaysAllClassroomsShouldBeAvailableInitially(Weekday weekday) {
-        assertEquals(sut.getAvailableClassroomsIds(weekday), asList(2, 4));
+    public void forAllWeekdaysAllClassroomsShouldBeAvailableInitially(HourOfWeek time) {
+        assertNotNull(sunday8AM);
+        assertNotNull(time);
+        assertEquals(sut.getAvailableClassroomsIds(time), asList(ID_CLASSROOM_1, ID_CLASSROOM_2));
     }
 
-    // booking a classroom should not remove classroom totally
     @Test
     public void bookingClassromShouldNotRemoveFromAllClassroomList() {
-        sut.book(4, Weekday.MONDAY);
-        assertEquals(sut.getAllClassroomsIds(), asList(2,4));
+        sut.book(ID_CLASSROOM_2, monday8AM);
+        assertEquals(sut.getAllClassroomsIds(), asList(ID_CLASSROOM_1,ID_CLASSROOM_2));
     }
 
     @DataProvider
-    public static final Object[][] getWeekdayPairs() {
-        return new Object[][] {
-            {Weekday.MONDAY, Weekday.TUESDAY},
-            {Weekday.TUESDAY, Weekday.MONDAY},
-            {Weekday.WEDNESDAY, Weekday.SATURDAY},
-            {Weekday.SATURDAY, Weekday.WEDNESDAY}
+    public Object[][] getWeekdayPairs() {
+
+       return new Object[][] {
+            {sunday8AM, sunday6PM},
+            {sunday6PM, sunday8AM},
+
+            {sunday6PM, monday8AM},
+            {monday8AM, sunday6PM}
         };
     }
 
-    // more cases
-    // classroom for tuesday should remain available when booking for monday
     @Test  (dataProvider = "getWeekdayPairs")
-    public void bookingForSeparateDayShouldRemainClassroomAvailable(Weekday weekdayToBook, Weekday weekdayToVerify) {
-        sut.book(4, weekdayToBook);
-        assertEquals(sut.getAvailableClassroomsIds(weekdayToVerify), asList(2,4));
+    public void bookingForSeparateDayShouldRemainClassroomAvailable(HourOfWeek timeToBook, HourOfWeek timeToVerify) {
+        sut.book(ID_CLASSROOM_2, timeToBook);
+
+        assertEquals(sut.getAvailableClassroomsIds(timeToVerify), asList(ID_CLASSROOM_1,ID_CLASSROOM_2));
     }
 
-    // should book more than one classroom for one day
     @Test
     public void shouldBookMoreThanOneClassroomForOneDay() {
-        sut.book(4, VALID_WEEKDAY);
-        sut.book(2, VALID_WEEKDAY);
-        assertEquals(sut.getAvailableClassroomsIds(VALID_WEEKDAY), Collections.emptyList());
+        sut.book(ID_CLASSROOM_2, VALID_TIME);
+        sut.book(ID_CLASSROOM_1, VALID_TIME);
+        assertEquals(sut.getAvailableClassroomsIds(VALID_TIME), Collections.emptyList());
     }
 
-    // should book one room for more than one day
     @Test
     public void shouldBookOneRoomForTwoOrMoreSeparateDay() {
-        sut.book(VALID_CLASSROOM_ID, Weekday.MONDAY);
-        sut.book(VALID_CLASSROOM_ID, Weekday.TUESDAY);
-        assertFalse(sut.getAvailableClassroomsIds(Weekday.MONDAY).contains(VALID_CLASSROOM_ID));
-        assertFalse(sut.getAvailableClassroomsIds(Weekday.TUESDAY).contains(VALID_CLASSROOM_ID));
+        sut.book(VALID_CLASSROOM_ID, sunday8AM);
+        sut.book(VALID_CLASSROOM_ID, sunday6PM);
+        assertFalse(sut.getAvailableClassroomsIds(sunday8AM).contains(VALID_CLASSROOM_ID));
+        assertFalse(sut.getAvailableClassroomsIds(sunday6PM).contains(VALID_CLASSROOM_ID));
     }
 
 
+    private HourOfWeek[] toArray(Collection<HourOfWeek> collection) {
+        return collection.toArray(new HourOfWeek[0]);
+    }
+
+    private HourOfWeek mockTime(List<HourOfWeek> allDays, HourOfWeek.Weekday weekday, Hour hour) {
+        HourOfWeek time = mock(HourOfWeek.class);
+        when(time.getHour()).thenReturn(hour);
+        when(time.getWeekday()).thenReturn(weekday);
+        allDays.add(time);
+        return time;
+    }
 }

@@ -1,6 +1,7 @@
 package lt.ignas.classroombooking;
 
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 /**
@@ -12,15 +13,28 @@ import org.testng.annotations.Test;
  */
 public class HourOfWeekTest {
 
-    //should get HourOfWeek By Weekday
-    @Test
-    public void shouldGetHourOfWeek() {
-        HourOfWeek time = HourOfWeek.get(Weekday.MONDAY, Hour.AM_8);
-        Assert.assertEquals(time.getWeekday(), Weekday.MONDAY);
-        Assert.assertEquals(time.getHour(), Hour.AM_8);
+
+
+   @DataProvider
+    public static final Object[][] getTimes() {
+        return new Object[][] {
+            {HourOfWeek.Weekday.MONDAY, Hour.AM_8},
+            {HourOfWeek.Weekday.MONDAY, Hour.PM_6},
+            {HourOfWeek.Weekday.SUNDAY, Hour.AM_8}
+
+        };
     }
 
+    //more cases , more
+    //should get HourOfWeek By Weekday
+    @Test  (dataProvider = "getTimes")
+    public void shouldGetHourOfWeek(HourOfWeek.Weekday weekday, Hour hour) {
+        HourOfWeek time = HourOfWeek.get(weekday, hour);
+        Assert.assertEquals(time.getWeekday(), weekday);
+        Assert.assertEquals(time.getHour(), hour);
+    }
 
+    //
 
 
 }

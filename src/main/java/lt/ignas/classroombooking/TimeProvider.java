@@ -1,12 +1,14 @@
 package lt.ignas.classroombooking;
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: ignas
- * Date: 9/30/13
- * Time: 10:57 AM
+ * Date: 10/1/13
+ * Time: 4:49 PM
  * To change this template use File | Settings | File Templates.
  */
-public enum Hour {
-    PM_6, AM_8
+public interface TimeProvider {
+    List<HourOfWeek> values();
 }
