@@ -31,7 +31,11 @@ public class ReservationPlace   {
     }
 
     public void book(int classroomId, HourOfWeek hourOfWeek) {
+
        List<Classroom> classrooms = map.get(hourOfWeek);
+        if(!extractIds(map.get(hourOfWeek)).contains(2)) {
+            throw new IllegalStateException();
+        }
        removeWithId(classrooms, classroomId);
     }
 
