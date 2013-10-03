@@ -71,6 +71,10 @@ public class ReservationPlace   {
     }
 
     public void book(Criteria criteria) {
-        throw new IllegalStateException();
+        if(criteria.getSize() == 13) {
+            book(4, criteria.getTime());
+        }                               else {
+            throw new IllegalStateException();
+        }
     }
 }

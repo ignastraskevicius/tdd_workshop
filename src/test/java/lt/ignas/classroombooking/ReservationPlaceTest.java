@@ -193,4 +193,16 @@ public class ReservationPlaceTest {
         sut.book(criteria);
     }
 
+    // should book available room respecting size criterion
+    @Test
+    public void shouldBookAvailableRoomRespectingSizeCriterion() {
+        when(classroom1.getSize()).thenReturn(10);
+        when(classroom2.getSize()).thenReturn(15);
+        Criteria criteria = mock(Criteria.class);
+        when(criteria.getTime()).thenReturn(VALID_TIME);
+        when(criteria.getSize()).thenReturn(13);
+        sut.book(criteria);
+
+        assertFalse(sut.getAvailableClassroomsIds(VALID_TIME).contains(ID_CLASSROOM_2));
+    }
 }
