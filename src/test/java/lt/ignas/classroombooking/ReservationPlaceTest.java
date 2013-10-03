@@ -198,20 +198,25 @@ public class ReservationPlaceTest {
         return new Object[][] {
             {10, 15, 13, ID_CLASSROOM_2},
             {20, 25, 23, ID_CLASSROOM_2},
+            {25, 20, 23, ID_CLASSROOM_1},
         };
     }
 
+    // more cases with room 1
     // more cases - with classroom 2 selection
     // should book available room respecting size criterion
     @Test (dataProvider = "getData")
-    public void shouldBookAvailableRoomRespectingSizeCriterion(int sizeRoom1, int sizeRoom2, int sizeRequested, int bookedRoomId) {
+    public void shouldBookLargeEnoughClassroom(int sizeRoom1, int sizeRoom2, int sizeRequested, int bookedRoomId) {
         when(classroom1.getSize()).thenReturn(sizeRoom1);
         when(classroom2.getSize()).thenReturn(sizeRoom2);
         Criteria criteria = mock(Criteria.class);
         when(criteria.getTime()).thenReturn(VALID_TIME);
         when(criteria.getSize()).thenReturn(sizeRequested);
         sut.book(criteria);
-
         assertFalse(sut.getAvailableClassroomsIds(VALID_TIME).contains(bookedRoomId));
     }
+
+
+
+
 }

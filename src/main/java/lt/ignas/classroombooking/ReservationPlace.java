@@ -5,10 +5,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -38,6 +35,29 @@ public class ReservationPlace   {
        removeWithId(classrooms, classroomId);
     }
 
+
+
+    public void setBookableClassrooms(List<Classroom> bookableClassrooms) {
+        this.bookableClassrooms = bookableClassrooms;
+
+        for(HourOfWeek hourOfWeek: provider.values()) {
+            map.put(hourOfWeek, new ArrayList<Classroom>(this.bookableClassrooms));
+        }
+    }
+
+    public void setProvider(TimeProvider provider) {
+        this.provider = provider;
+    }
+
+    public void book(final Criteria criteria) {
+        Classroom classroom = findClassroomLargerThanSize(bookableClassrooms, criteria.getSize());
+        if(classroom != null) {
+            book(classroom.getId(), criteria.getTime());
+        } else {
+            throw new IllegalStateException();
+        }
+    }
+
     private List<Integer> extractIds(List<Classroom> classroomList) {
         Iterable allClassromIds = Iterables.transform(classroomList, new Function<Classroom, Integer>() {
             @Override
@@ -58,23 +78,13 @@ public class ReservationPlace   {
         });
     }
 
-    public void setBookableClassrooms(List<Classroom> bookableClassrooms) {
-        this.bookableClassrooms = bookableClassrooms;
-
-        for(HourOfWeek hourOfWeek: provider.values()) {
-            map.put(hourOfWeek, new ArrayList<Classroom>(this.bookableClassrooms));
-        }
-    }
-
-    public void setProvider(TimeProvider provider) {
-        this.provider = provider;
-    }
-
-    public void book(Criteria criteria) {
-        if(criteria.getSize() < bookableClassrooms.get(1).getSize()) {
-            book(4, criteria.getTime());
-        }                               else {
-            throw new IllegalStateException();
-        }
+    private Classroom findClassroomLargerThanSize(Collection<Classroom> classroomList, final int size) {
+        Classroom classroom = Iterables.find(classroomList, new Predicate<Classroom>() {
+            @Override
+            public boolean apply(lt.ignas.classroombooking.Classroom classroom) {
+                return classroom.getSize() > size;
+            }
+        }, null);
+        return classroom;
     }
 }
