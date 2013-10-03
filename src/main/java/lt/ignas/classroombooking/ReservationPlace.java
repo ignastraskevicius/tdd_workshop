@@ -32,14 +32,12 @@ public class ReservationPlace   {
 
     public void book(int classroomId, HourOfWeek hourOfWeek) {
 
-       List<Classroom> classrooms = map.get(hourOfWeek);
-        if(!extractIds(map.get(hourOfWeek)).contains(2)) {
+       List<Classroom> availableClassrooms = map.get(hourOfWeek);
+        if(isClassroomBooked(classroomId, hourOfWeek)) {
             throw new IllegalStateException();
         }
-       removeWithId(classrooms, classroomId);
+       removeWithId(availableClassrooms, classroomId);
     }
-
-
 
     public void setBookableClassrooms(List<Classroom> bookableClassrooms) {
         this.bookableClassrooms = bookableClassrooms;
@@ -90,5 +88,9 @@ public class ReservationPlace   {
             }
         }, null);
         return classroom;
+    }
+
+    private boolean isClassroomBooked(int classroomId, HourOfWeek time) {
+        return !extractIds(map.get(time)).contains(classroomId);
     }
 }

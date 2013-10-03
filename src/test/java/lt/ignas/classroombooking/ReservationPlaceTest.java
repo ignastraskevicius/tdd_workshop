@@ -107,11 +107,12 @@ public class ReservationPlaceTest {
         assertFalse(sut.getAvailableClassroomsIds(VALID_TIME).contains(id));
     }
 
-    //should throw ISE when booking classroom wheich is already booked
-    @Test                     (expectedExceptions = IllegalStateException.class)
-    public void shouldThrowISEWhenBookingClassroomWhichIsAlreadyBooked() {
-        sut.book(ID_CLASSROOM_1, VALID_TIME);
-        sut.book(ID_CLASSROOM_1, VALID_TIME);
+    // another room is booked - also exception
+    //should throw ISE when booking classroom which is already booked
+    @Test (dataProvider = "getBookedId", expectedExceptions = IllegalStateException.class)
+    public void shouldThrowISEWhenBookingClassroomWhichIsAlreadyBooked(int classroomId) {
+        sut.book(classroomId, VALID_TIME);
+        sut.book(classroomId, VALID_TIME);
     }
 
     @Test()
