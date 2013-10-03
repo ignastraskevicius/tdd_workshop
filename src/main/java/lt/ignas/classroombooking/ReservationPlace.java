@@ -71,7 +71,7 @@ public class ReservationPlace   {
     }
 
     public void book(Criteria criteria) {
-        if(criteria.getSize() == 13) {
+        if(criteria.getSize() < bookableClassrooms.get(1).getSize()) {
             book(4, criteria.getTime());
         }                               else {
             throw new IllegalStateException();
