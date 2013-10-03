@@ -60,7 +60,7 @@ public class ReservationPlaceTest {
         sut.setBookableClassrooms(new ArrayList(asList(classroom1, classroom2)));
     }
 
-    @Test
+    @Test()
     public void shouldBeNoBookableClassroomsInitially() {
         ReservationPlace sut = new ReservationPlace();
         sut.setProvider(timeProvider);
@@ -85,7 +85,7 @@ public class ReservationPlaceTest {
         assertEquals(sut.getAllClassroomsIds(), asList(id));
     }
 
-    @Test
+    @Test()
     public void shouldSetMoreThanOneBookableClassrooms() {
         ReservationPlace sut = new ReservationPlace();
         sut.setProvider(timeProvider);
@@ -103,14 +103,16 @@ public class ReservationPlaceTest {
 
     @Test (dataProvider = "getBookedId")
     public void bookedClassroomShouldNotBeAvailable(int id) {
-        sut.book(id, monday8AM);
-        assertFalse(sut.getAvailableClassroomsIds(monday8AM).contains(id));
+        sut.book(id, VALID_TIME);
+        assertFalse(sut.getAvailableClassroomsIds(VALID_TIME).contains(id));
     }
 
-    @Test
+
+
+    @Test()
     public void notBookedClasseoomShouldBeAvailable() {
-        sut.book(ID_CLASSROOM_2, monday8AM);
-        assertTrue(sut.getAvailableClassroomsIds(monday8AM).contains(ID_CLASSROOM_1));
+        sut.book(ID_CLASSROOM_2, VALID_TIME);
+        assertTrue(sut.getAvailableClassroomsIds(VALID_TIME).contains(ID_CLASSROOM_1));
     }
 
 
@@ -126,14 +128,12 @@ public class ReservationPlaceTest {
 
     @Test (dataProvider = "getWeekday")
     public void forAllWeekdaysAllClassroomsShouldBeAvailableInitially(HourOfWeek time) {
-        assertNotNull(sunday8AM);
-        assertNotNull(time);
         assertEquals(sut.getAvailableClassroomsIds(time), asList(ID_CLASSROOM_1, ID_CLASSROOM_2));
     }
 
     @Test
     public void bookingClassromShouldNotRemoveFromAllClassroomList() {
-        sut.book(ID_CLASSROOM_2, monday8AM);
+        sut.book(ID_CLASSROOM_2, VALID_TIME);
         assertEquals(sut.getAllClassroomsIds(), asList(ID_CLASSROOM_1,ID_CLASSROOM_2));
     }
 
@@ -170,17 +170,6 @@ public class ReservationPlaceTest {
     }
 
 
-    private HourOfWeek[] toArray(Collection<HourOfWeek> collection) {
-        return collection.toArray(new HourOfWeek[0]);
-    }
-
-    private HourOfWeek mockTime(List<HourOfWeek> allDays, HourOfWeek.Weekday weekday, Hour hour) {
-        HourOfWeek time = mock(HourOfWeek.class);
-        when(time.getHour()).thenReturn(hour);
-        when(time.getWeekday()).thenReturn(weekday);
-        allDays.add(time);
-        return time;
-    }
 
     //should throw ISE when booking classroom with size larger than lasgest
     @Test    (expectedExceptions = IllegalStateException.class)
@@ -217,6 +206,12 @@ public class ReservationPlaceTest {
     }
 
 
-
+    private HourOfWeek mockTime(List<HourOfWeek> allDays, HourOfWeek.Weekday weekday, Hour hour) {
+        HourOfWeek time = mock(HourOfWeek.class);
+        when(time.getHour()).thenReturn(hour);
+        when(time.getWeekday()).thenReturn(weekday);
+        allDays.add(time);
+        return time;
+    }
 
 }
