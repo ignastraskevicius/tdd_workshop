@@ -211,9 +211,11 @@ public class ReservationPlaceTest {
             {10, 15, 13, ID_CLASSROOM_2},
             {20, 25, 23, ID_CLASSROOM_2},
             {25, 20, 23, ID_CLASSROOM_1},
+            {25, 20, 25, ID_CLASSROOM_1},
         };
     }
 
+    // boundary values
     // more cases with room 1
     // more cases - with classroom 2 selection
     // should book available room respecting size criterion

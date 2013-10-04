@@ -80,11 +80,11 @@ public class ReservationPlace   {
         });
     }
 
-    private Classroom findClassroomLargerThanSize(Collection<Classroom> classroomList, final int size) {
+    private Classroom findClassroomLargerThanSize(Collection<Classroom> classroomList, final int requestedSize) {
         Classroom classroom = Iterables.find(classroomList, new Predicate<Classroom>() {
             @Override
             public boolean apply(lt.ignas.classroombooking.Classroom classroom) {
-                return classroom.getSize() > size;
+                return classroom.getSize() >= requestedSize;
             }
         }, null);
         return classroom;
