@@ -52,7 +52,7 @@ public class ReservationPlace   {
     }
 
     public void book(final Criteria criteria) {
-        Classroom classroom = findClassroomLargerThanSize(map.get(provider.values().get(1)), criteria.getSize());
+        Classroom classroom = findClassroomLargerThanSize(map.get(criteria.getTime()), criteria.getSize());
         if(classroom != null) {
             book(classroom.getId(), criteria.getTime());
         } else {

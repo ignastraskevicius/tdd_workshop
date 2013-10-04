@@ -199,10 +199,27 @@ public class ReservationPlaceTest {
     public void shouldThrowISEWhenLargeTAvailableClassroomIsNotLargeEnough() {
         when(classroom1.getSize()).thenReturn(10);
         when(classroom2.getSize()).thenReturn(10);
-        when(criteriaA.getTime()).thenReturn(sunday6PM);
+        when(criteriaA.getTime()).thenReturn(VALID_TIME);
         when(criteriaA.getSize()).thenReturn(15);
         sut.book(criteriaA);
         sut.book(criteriaA);
+    }
+
+    // large enough room should be available for separate days
+    @Test
+    public void largeEnoughClassroomShouldBeAvailableForSeparateDays() {
+        when(classroom1.getSize()).thenReturn(10);
+        when(classroom2.getSize()).thenReturn(16);
+        when(criteriaA.getTime()).thenReturn(sunday6PM);
+        when(criteriaA.getSize()).thenReturn(15);
+        when(criteriaB.getTime()).thenReturn(sunday8AM);
+        when(criteriaB.getSize()).thenReturn(15);
+
+        sut.book(criteriaA);
+        sut.book(criteriaB);
+
+        assertFalse(sut.getAvailableClassroomsIds(sunday6PM).contains(ID_CLASSROOM_2));
+        assertFalse(sut.getAvailableClassroomsIds(sunday8AM).contains(ID_CLASSROOM_2));
     }
 
 
