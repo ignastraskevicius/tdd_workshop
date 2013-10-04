@@ -205,27 +205,6 @@ public class ReservationPlaceTest {
         sut.book(criteriaA);
     }
 
-    // large enough room should be available for separate days
-    @Test
-    public void largeEnoughClassroomShouldBeAvailableForSeparateDays() {
-        when(classroom1.getSize()).thenReturn(10);
-        when(classroom2.getSize()).thenReturn(16);
-        when(criteriaA.getTime()).thenReturn(sunday6PM);
-        when(criteriaA.getSize()).thenReturn(15);
-        when(criteriaB.getTime()).thenReturn(sunday8AM);
-        when(criteriaB.getSize()).thenReturn(15);
-
-        sut.book(criteriaA);
-        sut.book(criteriaB);
-
-        assertFalse(sut.getAvailableClassroomsIds(sunday6PM).contains(ID_CLASSROOM_2));
-        assertFalse(sut.getAvailableClassroomsIds(sunday8AM).contains(ID_CLASSROOM_2));
-    }
-
-
-
-
-
     @DataProvider
     public final Object[][] getData() {
         return new Object[][] {
@@ -248,7 +227,22 @@ public class ReservationPlaceTest {
         assertFalse(sut.getAvailableClassroomsIds(VALID_TIME).contains(bookedRoomId));
     }
 
+    // large enough room should be available for separate days
+    @Test
+    public void shouldBookLargeEnoughClassroomForSeparateDays() {
+        when(classroom1.getSize()).thenReturn(10);
+        when(classroom2.getSize()).thenReturn(16);
+        when(criteriaA.getTime()).thenReturn(sunday6PM);
+        when(criteriaA.getSize()).thenReturn(15);
+        when(criteriaB.getTime()).thenReturn(sunday8AM);
+        when(criteriaB.getSize()).thenReturn(15);
 
+        sut.book(criteriaA);
+        sut.book(criteriaB);
+
+        assertFalse(sut.getAvailableClassroomsIds(sunday6PM).contains(ID_CLASSROOM_2));
+        assertFalse(sut.getAvailableClassroomsIds(sunday8AM).contains(ID_CLASSROOM_2));
+    }
 
     private HourOfWeek mockTime(List<HourOfWeek> allDays, HourOfWeek.Weekday weekday, Hour hour) {
         HourOfWeek time = mock(HourOfWeek.class);
@@ -257,5 +251,4 @@ public class ReservationPlaceTest {
         allDays.add(time);
         return time;
     }
-
 }
