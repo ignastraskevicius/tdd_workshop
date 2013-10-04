@@ -109,7 +109,7 @@ public class ReservationPlaceTest {
 
     // another room is booked - also exception
     //should throw ISE when booking classroom which is already booked
-    @Test (dataProvider = "getBookedId", expectedExceptions = IllegalStateException.class)
+    @Test (dataProvider = "getBookedId", expectedExceptions = IllegalStateException.class, expectedExceptionsMessageRegExp = "booked")
     public void shouldThrowISEWhenBookingClassroomWhichIsAlreadyBooked(int classroomId) {
         sut.book(classroomId, VALID_TIME);
         sut.book(classroomId, VALID_TIME);
@@ -178,13 +178,25 @@ public class ReservationPlaceTest {
 
 
     //should throw ISE when booking classroom with size larger than lasgest
-    @Test    (expectedExceptions = IllegalStateException.class)
+    @Test    (expectedExceptions = IllegalStateException.class, expectedExceptionsMessageRegExp = "unavailable")
     public void shouldThrowISEWhenBookingClassroomWithSizeLargerThanLargest() {
         when(classroom1.getSize()).thenReturn(10);
         when(classroom2.getSize()).thenReturn(10);
         Criteria criteria = mock(Criteria.class);
         when(criteria.getTime()).thenReturn(sunday6PM);
         when(criteria.getSize()).thenReturn(15);
+        sut.book(criteria);
+    }
+
+    // should throw ISE When larges available classroom is not large enough
+    @Test    (expectedExceptions = IllegalStateException.class, expectedExceptionsMessageRegExp = "unavailable")
+    public void shouldThrowISEWhenLargeTAvailableClassroomIsNotLargeEnough() {
+        when(classroom1.getSize()).thenReturn(10);
+        when(classroom2.getSize()).thenReturn(10);
+        Criteria criteria = mock(Criteria.class);
+        when(criteria.getTime()).thenReturn(sunday6PM);
+        when(criteria.getSize()).thenReturn(15);
+        sut.book(criteria);
         sut.book(criteria);
     }
 
@@ -210,6 +222,7 @@ public class ReservationPlaceTest {
         sut.book(criteria);
         assertFalse(sut.getAvailableClassroomsIds(VALID_TIME).contains(bookedRoomId));
     }
+
 
 
     private HourOfWeek mockTime(List<HourOfWeek> allDays, HourOfWeek.Weekday weekday, Hour hour) {

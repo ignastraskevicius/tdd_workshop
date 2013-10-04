@@ -34,7 +34,7 @@ public class ReservationPlace   {
 
        List<Classroom> availableClassrooms = map.get(hourOfWeek);
         if(isClassroomBooked(classroomId, hourOfWeek)) {
-            throw new IllegalStateException();
+            throw new IllegalStateException("booked");
         }
        removeWithId(availableClassrooms, classroomId);
     }
@@ -52,11 +52,11 @@ public class ReservationPlace   {
     }
 
     public void book(final Criteria criteria) {
-        Classroom classroom = findClassroomLargerThanSize(bookableClassrooms, criteria.getSize());
+        Classroom classroom = findClassroomLargerThanSize(map.get(provider.values().get(1)), criteria.getSize());
         if(classroom != null) {
             book(classroom.getId(), criteria.getTime());
         } else {
-            throw new IllegalStateException();
+            throw new IllegalStateException( "unavailable") ;
         }
     }
 
