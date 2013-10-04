@@ -32,6 +32,9 @@ public class ReservationPlaceTest {
     HourOfWeek monday6PM;
     HourOfWeek VALID_TIME;
 
+    Criteria criteriaA;
+    Criteria criteriaB;
+
     TimeProvider timeProvider;
 
     @BeforeClass
@@ -51,6 +54,10 @@ public class ReservationPlaceTest {
         when(classroom1.getId()).thenReturn(ID_CLASSROOM_1);
         classroom2 = mock(Classroom.class);
         when(classroom2.getId()).thenReturn(ID_CLASSROOM_2);
+
+
+        criteriaA = mock(Criteria.class);
+        criteriaB = mock(Criteria.class);
     }
 
     @BeforeMethod
@@ -182,10 +189,9 @@ public class ReservationPlaceTest {
     public void shouldThrowISEWhenBookingClassroomWithSizeLargerThanLargest() {
         when(classroom1.getSize()).thenReturn(10);
         when(classroom2.getSize()).thenReturn(10);
-        Criteria criteria = mock(Criteria.class);
-        when(criteria.getTime()).thenReturn(sunday6PM);
-        when(criteria.getSize()).thenReturn(15);
-        sut.book(criteria);
+        when(criteriaA.getTime()).thenReturn(sunday6PM);
+        when(criteriaA.getSize()).thenReturn(15);
+        sut.book(criteriaA);
     }
 
     // should throw ISE When larges available classroom is not large enough
@@ -193,12 +199,15 @@ public class ReservationPlaceTest {
     public void shouldThrowISEWhenLargeTAvailableClassroomIsNotLargeEnough() {
         when(classroom1.getSize()).thenReturn(10);
         when(classroom2.getSize()).thenReturn(10);
-        Criteria criteria = mock(Criteria.class);
-        when(criteria.getTime()).thenReturn(sunday6PM);
-        when(criteria.getSize()).thenReturn(15);
-        sut.book(criteria);
-        sut.book(criteria);
+        when(criteriaA.getTime()).thenReturn(sunday6PM);
+        when(criteriaA.getSize()).thenReturn(15);
+        sut.book(criteriaA);
+        sut.book(criteriaA);
     }
+
+
+
+
 
     @DataProvider
     public final Object[][] getData() {
@@ -216,10 +225,9 @@ public class ReservationPlaceTest {
     public void shouldBookLargeEnoughClassroom(int sizeRoom1, int sizeRoom2, int sizeRequested, int bookedRoomId) {
         when(classroom1.getSize()).thenReturn(sizeRoom1);
         when(classroom2.getSize()).thenReturn(sizeRoom2);
-        Criteria criteria = mock(Criteria.class);
-        when(criteria.getTime()).thenReturn(VALID_TIME);
-        when(criteria.getSize()).thenReturn(sizeRequested);
-        sut.book(criteria);
+        when(criteriaA.getTime()).thenReturn(VALID_TIME);
+        when(criteriaA.getSize()).thenReturn(sizeRequested);
+        sut.book(criteriaA);
         assertFalse(sut.getAvailableClassroomsIds(VALID_TIME).contains(bookedRoomId));
     }
 
