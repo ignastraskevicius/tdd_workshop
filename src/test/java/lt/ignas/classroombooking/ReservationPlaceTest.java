@@ -277,18 +277,29 @@ public class ReservationPlaceTest {
         assertFalse(sut.getAvailableClassroomsIds(VALID_TIME).contains(expectedToBookedClassromId));
     }
 
+    @DataProvider
+    public final Object[][] getEquipmentPairs() {
+        return new Object[][] {
+            {Equipment.PROJECTOR, Equipment.BOARD},
+            {Equipment.BOARD, Equipment.PROJECTOR}
+        };
+    }
+
+    //different cases
     //should throw ISE when no room has requested equipment
-    @Test (expectedExceptions = IllegalStateException.class, expectedExceptionsMessageRegExp = "no classroom having requested equipment")
-    public void shouldThrowISEWhenNoRoomHasRequestedEquipment() {
+    @Test (dataProvider = "getEquipmentPairs", expectedExceptions = IllegalStateException.class, expectedExceptionsMessageRegExp = "no classroom having requested equipment")
+    public void shouldThrowISEWhenNoRoomHasRequestedEquipment(Equipment existingEquipment, Equipment requestedEquipment) {
         when(classroom1.getSize()).thenReturn(10);
-        when(classroom1.getEquipment()).thenReturn(Equipment.BOARD);
+        when(classroom1.getEquipment()).thenReturn(existingEquipment);
         when(classroom2.getSize()).thenReturn(10);
-        when(classroom1.getEquipment()).thenReturn(Equipment.BOARD);
+        when(classroom1.getEquipment()).thenReturn(existingEquipment);
         when(criteriaA.getTime()).thenReturn(VALID_TIME);
         when(criteriaA.getSize()).thenReturn(7);
-        when(criteriaA.getEquipment()).thenReturn(Equipment.PROJECTOR);
+        when(criteriaA.getEquipment()).thenReturn(requestedEquipment);
         sut.book(criteriaA);
     }
+
+
 
     // large enough room should be available for separate days
     @Test

@@ -55,7 +55,7 @@ public class ReservationPlace   {
         List<Classroom> classroomzz = findClassroomsLargerThanSize(map.get(criteria.getTime()), criteria.getSize());
         Classroom classroom;
         if(criteria.getEquipment() != null) {
-            classroom = findClassroomsWithEquipment(classroomzz, Equipment.PROJECTOR);
+            classroom = findClassroomsWithEquipment(classroomzz, criteria.getEquipment());
             if(classroom == null) {
                 throw new IllegalStateException("no classroom having requested equipment");
             }
