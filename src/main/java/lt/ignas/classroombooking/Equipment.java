@@ -8,5 +8,5 @@ package lt.ignas.classroombooking;
  * To change this template use File | Settings | File Templates.
  */
 public enum Equipment {
-    PROJECTO
+    PROJECTOR
 }

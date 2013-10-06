@@ -6,7 +6,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -235,12 +234,12 @@ public class ReservationPlaceTest {
     public void shouldBookClassroomWithProjector() {
         when(classroom1.getSize()).thenReturn(10);
         when(classroom2.getSize()).thenReturn(10);
-        when(classroom2.getEquipment()).thenReturn(Equipment.PROJECTO);
+        when(classroom2.getEquipment()).thenReturn(Equipment.PROJECTOR);
         when(criteriaA.getTime()).thenReturn(sunday8AM);
         when(criteriaA.getSize()).thenReturn(7);
-        when(criteriaA.getEquipment()).thenReturn(Equipment.PROJECTO);
+        when(criteriaA.getEquipment()).thenReturn(Equipment.PROJECTOR);
         sut.book(criteriaA);
-        assertFalse(sut.getAvailableClassroomsIds(VALID_TIME).contains(ID_CLASSROOM_2));
+        assertFalse(sut.getAvailableClassroomsIds(sunday8AM).contains(ID_CLASSROOM_2));
 
     }
 
