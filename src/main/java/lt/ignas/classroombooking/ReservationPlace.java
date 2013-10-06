@@ -52,14 +52,15 @@ public class ReservationPlace   {
     }
 
     public void book(final Criteria criteria) {
-        Classroom classroom = findClassroomLargerThanSize(map.get(criteria.getTime()), criteria.getSize());
+        List<Classroom> classroomzz = findClassroomsLargerThanSize(map.get(criteria.getTime()), criteria.getSize());
+        Classroom classroom;
+        if(criteria.getEquipment() != null) {
+            classroom = findClassroomsWithEquipment(classroomzz);
+        } else {
+            classroom = classroomzz.isEmpty() ? null : classroomzz.get(0);
+        }
         if(classroom != null) {
-            if(criteria.getEquipment() != null) {
-                book(4, criteria.getTime());
-            }  else {
-                book(classroom.getId(), criteria.getTime());
-            }
-
+            book(classroom.getId(), criteria.getTime());
         } else {
             throw new IllegalStateException( "unavailable") ;
         }
@@ -85,13 +86,23 @@ public class ReservationPlace   {
         });
     }
 
-    private Classroom findClassroomLargerThanSize(Collection<Classroom> classroomList, final int requestedSize) {
-        Classroom classroom = Iterables.find(classroomList, new Predicate<Classroom>() {
+    private List<Classroom> findClassroomsLargerThanSize(Collection<Classroom> classroomList, final int requestedSize) {
+        Iterable<Classroom> classrooms = Iterables.filter(classroomList, new Predicate<Classroom>() {
             @Override
             public boolean apply(lt.ignas.classroombooking.Classroom classroom) {
                 return classroom.getSize() >= requestedSize;
             }
-        }, null);
+        });
+        return Lists.newArrayList(classrooms);
+    }
+
+    private Classroom findClassroomsWithEquipment(Collection<Classroom> classroomList) {
+        Classroom classroom = Iterables.find(classroomList, new Predicate<Classroom>() {
+            @Override
+            public boolean apply(lt.ignas.classroombooking.Classroom classroom) {
+                return classroom.getEquipment() != null;
+            }
+        });
         return classroom;
     }
 

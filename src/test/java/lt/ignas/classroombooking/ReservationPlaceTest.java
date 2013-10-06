@@ -255,6 +255,19 @@ public class ReservationPlaceTest {
 
     }
 
+    // should book any classroom
+    @Test
+    public void shouldBookAnyClassroomWithEquipment() {
+        when(classroom1.getSize()).thenReturn(10);
+        when(classroom1.getEquipment()).thenReturn(Equipment.PROJECTOR);
+        when(classroom2.getSize()).thenReturn(10);
+        when(criteriaA.getTime()).thenReturn(VALID_TIME);
+        when(criteriaA.getSize()).thenReturn(7);
+        when(criteriaA.getEquipment()).thenReturn(Equipment.PROJECTOR);
+        sut.book(criteriaA);
+        assertFalse(sut.getAvailableClassroomsIds(VALID_TIME).contains(ID_CLASSROOM_1));
+    }
+
     // large enough room should be available for separate days
     @Test
     public void shouldBookLargeEnoughClassroomForSeparateDays() {
