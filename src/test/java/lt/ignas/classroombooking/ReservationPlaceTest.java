@@ -255,18 +255,29 @@ public class ReservationPlaceTest {
 
     }
 
+    @DataProvider
+    public final Object[][] getEquipment() {
+        return new Object[][] {
+            {null, Equipment.PROJECTOR, ID_CLASSROOM_2},
+            {Equipment.PROJECTOR, null, ID_CLASSROOM_1}
+        };
+    }
+
     // should book any classroom
-    @Test
-    public void shouldBookAnyClassroomWithEquipment() {
+    @Test (dataProvider = "getEquipment")
+    public void shouldBookAnyClassroomWithEquipment(Equipment equipmentForClassroom1, Equipment equipmentForClassroom2, int expectedToBookedClassromId) {
         when(classroom1.getSize()).thenReturn(10);
-        when(classroom1.getEquipment()).thenReturn(Equipment.PROJECTOR);
+        when(classroom1.getEquipment()).thenReturn(equipmentForClassroom1);
         when(classroom2.getSize()).thenReturn(10);
+        when(classroom2.getEquipment()).thenReturn(equipmentForClassroom2);
         when(criteriaA.getTime()).thenReturn(VALID_TIME);
         when(criteriaA.getSize()).thenReturn(7);
         when(criteriaA.getEquipment()).thenReturn(Equipment.PROJECTOR);
         sut.book(criteriaA);
-        assertFalse(sut.getAvailableClassroomsIds(VALID_TIME).contains(ID_CLASSROOM_1));
+        assertFalse(sut.getAvailableClassroomsIds(VALID_TIME).contains(expectedToBookedClassromId));
     }
+
+
 
     // large enough room should be available for separate days
     @Test
