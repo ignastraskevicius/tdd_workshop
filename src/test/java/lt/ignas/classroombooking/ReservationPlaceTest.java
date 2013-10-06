@@ -1,5 +1,7 @@
 package lt.ignas.classroombooking;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -36,15 +38,26 @@ public class ReservationPlaceTest {
 
     TimeProvider timeProvider;
 
+    List<HourOfWeek> possibleTimes;
+    
+    private static Logger logger = LoggerFactory.getLogger(ReservationPlaceTest.class.getName());
+
     @BeforeClass
     public void setUpConstants() {
-        List<HourOfWeek> possibleTimes = new ArrayList<HourOfWeek>();
+
+        possibleTimes = new ArrayList<HourOfWeek>();
         sunday8AM = mockTime(possibleTimes, HourOfWeek.Weekday.SUNDAY, Hour.AM_8);
         sunday6PM = mockTime(possibleTimes, HourOfWeek.Weekday.SUNDAY, Hour.PM_6);
         monday8AM = mockTime(possibleTimes, HourOfWeek.Weekday.MONDAY, Hour.AM_8);
         monday6PM = mockTime(possibleTimes, HourOfWeek.Weekday.MONDAY, Hour.PM_6);
 
         VALID_TIME = sunday8AM;
+
+
+    }
+
+    @BeforeMethod
+    public void setUpSutAndDependencies() {
 
         timeProvider = mock(TimeProvider.class);
         when(timeProvider.values()).thenReturn(possibleTimes);
@@ -57,10 +70,7 @@ public class ReservationPlaceTest {
 
         criteriaA = mock(Criteria.class);
         criteriaB = mock(Criteria.class);
-    }
 
-    @BeforeMethod
-    public void setUpSutAndDependencies() {
         sut = new ReservationPlace();
         sut.setProvider(timeProvider);
         sut.setBookableClassrooms(new ArrayList(asList(classroom1, classroom2)));
@@ -205,7 +215,7 @@ public class ReservationPlaceTest {
     }
 
     @DataProvider
-    public final Object[][] getData() {
+    public final Object[][] getClassroomSizes() {
         return new Object[][] {
             {10, 15, 13, ID_CLASSROOM_2},
             {20, 25, 23, ID_CLASSROOM_2},
@@ -218,7 +228,7 @@ public class ReservationPlaceTest {
     // more cases with room 1
     // more cases - with classroom 2 selection
     // should book available room respecting size criterion
-    @Test (dataProvider = "getData")
+    @Test (dataProvider = "getClassroomSizes")
     public void shouldBookLargeEnoughClassroom(int sizeRoom1, int sizeRoom2, int sizeRequested, int bookedRoomId) {
         when(classroom1.getSize()).thenReturn(sizeRoom1);
         when(classroom2.getSize()).thenReturn(sizeRoom2);
@@ -228,18 +238,20 @@ public class ReservationPlaceTest {
         assertFalse(sut.getAvailableClassroomsIds(VALID_TIME).contains(bookedRoomId));
     }
 
-    // more cases. Other room preferred
+
+
+    // more cases. any weekday
     // should book classroom with projector
-    @Test
-    public void shouldBookClassroomWithProjector() {
+    @Test (dataProvider = "getWeekday")
+    public void forAnyWeekdayShouldBookClassroomWithProjector(HourOfWeek time) {
         when(classroom1.getSize()).thenReturn(10);
         when(classroom2.getSize()).thenReturn(10);
         when(classroom2.getEquipment()).thenReturn(Equipment.PROJECTOR);
-        when(criteriaA.getTime()).thenReturn(sunday8AM);
+        when(criteriaA.getTime()).thenReturn(time);
         when(criteriaA.getSize()).thenReturn(7);
         when(criteriaA.getEquipment()).thenReturn(Equipment.PROJECTOR);
         sut.book(criteriaA);
-        assertFalse(sut.getAvailableClassroomsIds(sunday8AM).contains(ID_CLASSROOM_2));
+        assertFalse(sut.getAvailableClassroomsIds(time).contains(ID_CLASSROOM_2));
 
     }
 
