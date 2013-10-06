@@ -55,7 +55,10 @@ public class ReservationPlace   {
         List<Classroom> classroomzz = findClassroomsLargerThanSize(map.get(criteria.getTime()), criteria.getSize());
         Classroom classroom;
         if(criteria.getEquipment() != null) {
-            classroom = findClassroomsWithEquipment(classroomzz);
+            classroom = findClassroomsWithEquipment(classroomzz, Equipment.PROJECTOR);
+            if(classroom == null) {
+                throw new IllegalStateException("no classroom having requested equipment");
+            }
         } else {
             classroom = classroomzz.isEmpty() ? null : classroomzz.get(0);
         }
@@ -96,13 +99,13 @@ public class ReservationPlace   {
         return Lists.newArrayList(classrooms);
     }
 
-    private Classroom findClassroomsWithEquipment(Collection<Classroom> classroomList) {
+    private Classroom findClassroomsWithEquipment(Collection<Classroom> classroomList, final Equipment requestedEquipment) {
         Classroom classroom = Iterables.find(classroomList, new Predicate<Classroom>() {
             @Override
             public boolean apply(lt.ignas.classroombooking.Classroom classroom) {
-                return classroom.getEquipment() != null;
+                return classroom.getEquipment() == requestedEquipment;
             }
-        });
+        }, null);
         return classroom;
     }
 

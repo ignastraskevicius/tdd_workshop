@@ -277,7 +277,18 @@ public class ReservationPlaceTest {
         assertFalse(sut.getAvailableClassroomsIds(VALID_TIME).contains(expectedToBookedClassromId));
     }
 
-
+    //should throw ISE when no room has requested equipment
+    @Test (expectedExceptions = IllegalStateException.class, expectedExceptionsMessageRegExp = "no classroom having requested equipment")
+    public void shouldThrowISEWhenNoRoomHasRequestedEquipment() {
+        when(classroom1.getSize()).thenReturn(10);
+        when(classroom1.getEquipment()).thenReturn(Equipment.BOARD);
+        when(classroom2.getSize()).thenReturn(10);
+        when(classroom1.getEquipment()).thenReturn(Equipment.BOARD);
+        when(criteriaA.getTime()).thenReturn(VALID_TIME);
+        when(criteriaA.getSize()).thenReturn(7);
+        when(criteriaA.getEquipment()).thenReturn(Equipment.PROJECTOR);
+        sut.book(criteriaA);
+    }
 
     // large enough room should be available for separate days
     @Test
