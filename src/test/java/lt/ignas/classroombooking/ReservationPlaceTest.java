@@ -229,6 +229,21 @@ public class ReservationPlaceTest {
         assertFalse(sut.getAvailableClassroomsIds(VALID_TIME).contains(bookedRoomId));
     }
 
+    // more cases. Other room preferred
+    // should book classroom with projector
+    @Test
+    public void shouldBookClassroomWithProjector() {
+        when(classroom1.getSize()).thenReturn(10);
+        when(classroom2.getSize()).thenReturn(10);
+        when(classroom2.getEquipment()).thenReturn(Equipment.PROJECTO);
+        when(criteriaA.getTime()).thenReturn(sunday8AM);
+        when(criteriaA.getSize()).thenReturn(7);
+        when(criteriaA.getEquipment()).thenReturn(Equipment.PROJECTO);
+        sut.book(criteriaA);
+        assertFalse(sut.getAvailableClassroomsIds(VALID_TIME).contains(ID_CLASSROOM_2));
+
+    }
+
     // large enough room should be available for separate days
     @Test
     public void shouldBookLargeEnoughClassroomForSeparateDays() {
@@ -245,6 +260,8 @@ public class ReservationPlaceTest {
         assertFalse(sut.getAvailableClassroomsIds(sunday6PM).contains(ID_CLASSROOM_2));
         assertFalse(sut.getAvailableClassroomsIds(sunday8AM).contains(ID_CLASSROOM_2));
     }
+
+
 
     private HourOfWeek mockTime(List<HourOfWeek> allDays, HourOfWeek.Weekday weekday, Hour hour) {
         HourOfWeek time = mock(HourOfWeek.class);

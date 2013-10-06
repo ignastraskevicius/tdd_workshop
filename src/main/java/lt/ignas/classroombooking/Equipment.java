@@ -3,14 +3,10 @@ package lt.ignas.classroombooking;
 /**
  * Created with IntelliJ IDEA.
  * User: ignas
- * Date: 9/28/13
- * Time: 9:13 AM
+ * Date: 10/6/13
+ * Time: 4:26 PM
  * To change this template use File | Settings | File Templates.
  */
-public interface Classroom {
-    int getId();
-
-    int getSize();
-
-    Equipment getEquipment();
+public enum Equipment {
+    PROJECTO
 }

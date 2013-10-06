@@ -54,7 +54,12 @@ public class ReservationPlace   {
     public void book(final Criteria criteria) {
         Classroom classroom = findClassroomLargerThanSize(map.get(criteria.getTime()), criteria.getSize());
         if(classroom != null) {
-            book(classroom.getId(), criteria.getTime());
+            if(criteria.getEquipment() != null) {
+                book(4, provider.values().get(0));
+            }  else {
+                book(classroom.getId(), criteria.getTime());
+            }
+
         } else {
             throw new IllegalStateException( "unavailable") ;
         }

@@ -11,4 +11,6 @@ public interface Criteria {
     HourOfWeek getTime();
 
     int getSize();
+
+    Equipment getEquipment();
 }
