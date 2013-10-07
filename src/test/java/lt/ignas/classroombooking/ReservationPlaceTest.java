@@ -1,5 +1,8 @@
 package lt.ignas.classroombooking;
 
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.BeforeClass;
@@ -19,13 +22,17 @@ import static org.testng.Assert.*;
 @Test
 public class ReservationPlaceTest {
 
+    @Mock
     Classroom classroom1;
+
+    @Mock
     Classroom classroom2;
+
     final int ID_CLASSROOM_1 = 2;
     final int ID_CLASSROOM_2 = 4;
     int VALID_CLASSROOM_ID = ID_CLASSROOM_2;
 
-    ReservationPlace sut;
+    @InjectMocks ReservationPlace sut;
 
     HourOfWeek sunday8AM;
     HourOfWeek sunday6PM;
@@ -33,9 +40,13 @@ public class ReservationPlaceTest {
     HourOfWeek monday6PM;
     HourOfWeek VALID_TIME;
 
+    @Mock
     Criteria criteriaA;
+
+    @Mock
     Criteria criteriaB;
 
+    @Mock
     TimeProvider timeProvider;
 
     List<HourOfWeek> possibleTimes;
@@ -57,19 +68,16 @@ public class ReservationPlaceTest {
     }
 
     @BeforeMethod
-    public void setUpSutAndDependencies() {
+    public void initMocks() {
+        MockitoAnnotations.initMocks(this);
+    }
 
-        timeProvider = mock(TimeProvider.class);
+    @BeforeMethod
+    public void setUpSutAndDependencies() {
         when(timeProvider.values()).thenReturn(possibleTimes);
 
-        classroom1 = mock(Classroom.class);
         when(classroom1.getId()).thenReturn(ID_CLASSROOM_1);
-        classroom2 = mock(Classroom.class);
         when(classroom2.getId()).thenReturn(ID_CLASSROOM_2);
-
-
-        criteriaA = mock(Criteria.class);
-        criteriaB = mock(Criteria.class);
 
         sut = new ReservationPlace();
         sut.setProvider(timeProvider);
@@ -298,8 +306,6 @@ public class ReservationPlaceTest {
         when(criteriaA.getEquipment()).thenReturn(requestedEquipment);
         sut.book(criteriaA);
     }
-
-
 
     // large enough room should be available for separate days
     @Test

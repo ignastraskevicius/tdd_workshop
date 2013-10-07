@@ -112,4 +112,6 @@ public class ReservationPlace   {
     private boolean isClassroomBooked(int classroomId, HourOfWeek time) {
         return !extractIds(map.get(time)).contains(classroomId);
     }
+
+
 }
